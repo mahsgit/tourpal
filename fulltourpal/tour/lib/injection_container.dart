@@ -129,39 +129,56 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tour/features/profile/data/datasources/profile_local_datasource.dart';
-import 'package:tour/features/profile/data/datasources/profile_remote_datasource.dart';
-import 'package:tour/features/profile/data/repositories/profile_repository_impl.dart';
-import 'package:tour/features/profile/domain/repositories/profile_repository.dart';
-import 'package:tour/features/profile/domain/usecases/delete_profile.dart';
-import 'package:tour/features/profile/domain/usecases/get_current_profile.dart';
-import 'package:tour/features/profile/domain/usecases/update_profile.dart';
+import 'package:tour/features/auth/auth/data/datasources/auth_local_datasource.dart';
+import 'package:tour/features/auth/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:tour/features/auth/auth/data/repositories/auth_repository_impl.dart';
+import 'package:tour/features/auth/auth/domain/repositories/auth_repository.dart';
+import 'package:tour/features/auth/auth/domain/usecases/forgot_password.dart';
+import 'package:tour/features/auth/auth/domain/usecases/google_login.dart';
+import 'package:tour/features/auth/auth/domain/usecases/login.dart';
+import 'package:tour/features/auth/auth/domain/usecases/logout.dart';
+import 'package:tour/features/auth/auth/domain/usecases/refresh_token.dart';
+import 'package:tour/features/auth/auth/domain/usecases/register.dart';
+import 'package:tour/features/auth/auth/domain/usecases/reset_password.dart';
+import 'package:tour/features/auth/auth/domain/usecases/validate_email.dart';
+import 'package:tour/features/auth/auth/presentation/bloc/auth_bloc.dart';
+
+// Core
 import 'core/network/network_info.dart';
-import 'features/auth/auth/data/datasources/auth_local_datasource.dart';
-import 'features/auth/auth/data/datasources/auth_remote_datasource.dart';
-import 'features/auth/auth/data/repositories/auth_repository_impl.dart';
-import 'features/auth/auth/domain/repositories/auth_repository.dart';
-import 'features/auth/auth/domain/usecases/forgot_password.dart';
-import 'features/auth/auth/domain/usecases/google_login.dart';
-import 'features/auth/auth/domain/usecases/login.dart';
-import 'features/auth/auth/domain/usecases/logout.dart';
-import 'features/auth/auth/domain/usecases/refresh_token.dart';
-import 'features/auth/auth/domain/usecases/register.dart';
-import 'features/auth/auth/domain/usecases/reset_password.dart';
-import 'features/auth/auth/domain/usecases/validate_email.dart';
-import 'features/auth/auth/presentation/bloc/auth_bloc.dart';
+
+
+
+// Profile Feature
+import 'features/profile/data/datasources/profile_local_datasource.dart';
+import 'features/profile/data/datasources/profile_remote_datasource.dart';
+import 'features/profile/data/repositories/profile_repository_impl.dart';
+import 'features/profile/domain/repositories/profile_repository.dart';
+import 'features/profile/domain/usecases/delete_profile.dart';
+import 'features/profile/domain/usecases/get_current_profile.dart';
+import 'features/profile/domain/usecases/update_profile.dart';
 import 'features/profile/presentation/bloc/profile_bloc.dart';
+
+// Business Feature
+import 'features/business/data/datasources/business_local_datasource.dart';
+import 'features/business/data/datasources/business_remote_datasource.dart';
+import 'features/business/data/repositories/business_repository_impl.dart';
+import 'features/business/domain/repositories/business_repository.dart';
+import 'features/business/domain/usecases/get_businesses.dart';
+import 'features/business/domain/usecases/get_business_details.dart';
+import 'features/business/presentation/bloc/business_bloc.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
   //! Features
-
   // Auth
   await _initAuth();
 
   // Profile
   await _initProfile();
+
+  // Business
+  await _initBusiness();
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
@@ -244,11 +261,45 @@ Future<void> _initProfile() async {
   sl.registerLazySingleton<ProfileRemoteDataSource>(
     () => ProfileRemoteDataSourceImpl(
       client: sl(),
-       authLocalDataSource: sl(),
-      ),
+      authLocalDataSource: sl(),
+    ),
   );
   sl.registerLazySingleton<ProfileLocalDataSource>(
     () => ProfileLocalDataSourceImpl(sharedPreferences: sl()),
+  );
+}
+
+Future<void> _initBusiness() async {
+  // Bloc
+  sl.registerFactory<BusinessBloc>(  // Changed to explicit type
+    () => BusinessBloc(
+      getBusinesses: sl<GetBusinesses>(),  // Added explicit types
+      getBusinessDetails: sl<GetBusinessDetails>(),
+    ),
+  );
+
+  // Use cases
+  sl.registerLazySingleton<GetBusinesses>(() => GetBusinesses(sl()));  // Added explicit types
+  sl.registerLazySingleton<GetBusinessDetails>(() => GetBusinessDetails(sl()));
+
+  // Repository
+  sl.registerLazySingleton<BusinessRepository>(
+    () => BusinessRepositoryImpl(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
+
+  // Data sources
+  sl.registerLazySingleton<BusinessRemoteDataSource>(
+    () => BusinessRemoteDataSourceImpl(
+      client: sl(),
+      authLocalDataSource: sl(),
+    ),
+  );
+  sl.registerLazySingleton<BusinessLocalDataSource>(
+    () => BusinessLocalDataSourceImpl(sharedPreferences: sl()),
   );
 }
 

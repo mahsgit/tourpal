@@ -32,5 +32,8 @@ class Urls {
   static const String getCurrentProfile = '$baseUrl/users/me';
   static const String updateProfile = '$baseUrl/users/me';
   static const String deleteProfile = '$baseUrl/users/me';
+
+  //business
+  static const String businesses = '$baseUrl/businesses';
 }
 

@@ -1,10 +1,19 @@
+
+
 // import 'package:flutter/material.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:tour/home.dart';
+// import 'package:tour/features/auth/auth/presentation/bloc/auth_bloc.dart';
+// import 'package:tour/features/auth/auth/presentation/pages/login_page.dart';
+// import 'package:tour/features/auth/auth/presentation/pages/register_page.dart';
 // import 'injection_container.dart' as di;
-// import 'features/auth/presentation/pages/login_page.dart';
-// import 'features/auth/presentation/pages/register_page.dart';
-// import 'features/auth/presentation/bloc/auth_bloc.dart';
+
+// // Features
+// import 'features/profile/presentation/pages/profile_page.dart';
+// import 'features/profile/presentation/pages/edit_profile_page.dart';
+// import 'features/profile/presentation/bloc/profile_bloc.dart';
+// import 'features/profile/domain/entities/user_profile_entity.dart';
+// import 'home.dart';
+
 
 // void main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +30,9 @@
 //       providers: [
 //         BlocProvider<AuthBloc>(
 //           create: (context) => di.sl<AuthBloc>(),
+//         ),
+//         BlocProvider<ProfileBloc>(
+//           create: (context) => di.sl<ProfileBloc>(),
 //         ),
 //       ],
 //       child: MaterialApp(
@@ -61,31 +73,64 @@
 //             ),
 //           ),
 //         ),
-//         home: const LoginPage(),
-//         routes: {
-//           '/login': (context) => const LoginPage(),
-//           '/register': (context) => const RegisterPage(),
-//           '/home':(context)=>const Home(),
+//         initialRoute: '/login',
+//         onGenerateRoute: (settings) {
+//           switch (settings.name) {
+//             case '/':
+//               return MaterialPageRoute(
+//                 builder: (_) => const HomePage(),
+//               );
+//             case '/login':
+//               return MaterialPageRoute(
+//                 builder: (_) => const LoginPage(),
+//               );
+//             case '/register':
+//               return MaterialPageRoute(
+//                 builder: (_) => const RegisterPage(),
+//               );
+//             case '/profile':
+//               return MaterialPageRoute(
+//                 builder: (_) => const ProfilePage(),
+//               );
+//               case '/home':
+//               return MaterialPageRoute(
+//                 builder: (_) => const HomePage(),
+//               );
+//             case '/profile/edit':
+//               final profile = settings.arguments as UserProfileEntity;
+//               return MaterialPageRoute(
+//                 builder: (_) => EditProfilePage(profile: profile),
+//               );
+//             default:
+//               return MaterialPageRoute(
+//                 builder: (_) => const LoginPage(),
+//               );
+//           }
 //         },
 //       ),
 //     );
 //   }
 // }
 
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:tour/features/auth/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tour/features/auth/auth/presentation/pages/login_page.dart';
 import 'package:tour/features/auth/auth/presentation/pages/register_page.dart';
 import 'injection_container.dart' as di;
 
 // Features
+
 import 'features/profile/presentation/pages/profile_page.dart';
 import 'features/profile/presentation/pages/edit_profile_page.dart';
 import 'features/profile/presentation/bloc/profile_bloc.dart';
 import 'features/profile/domain/entities/user_profile_entity.dart';
-import 'home.dart';
-
+import 'features/business/presentation/pages/business_list_page.dart';
+import 'features/business/presentation/pages/business_details_page.dart';
+import 'features/business/presentation/bloc/business_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -105,6 +150,10 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<ProfileBloc>(
           create: (context) => di.sl<ProfileBloc>(),
+        ),
+        BlocProvider<BusinessBloc>(
+          create: (context) => di.sl<BusinessBloc>(),
+          lazy: false,  // Added to ensure immediate creation
         ),
       ],
       child: MaterialApp(
@@ -149,8 +198,9 @@ class MyApp extends StatelessWidget {
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case '/':
+            case '/businesses':
               return MaterialPageRoute(
-                builder: (_) => const HomePage(),
+                builder: (_) => const BusinessListPage(),
               );
             case '/login':
               return MaterialPageRoute(
@@ -164,14 +214,15 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                 builder: (_) => const ProfilePage(),
               );
-              case '/home':
-              return MaterialPageRoute(
-                builder: (_) => const HomePage(),
-              );
             case '/profile/edit':
               final profile = settings.arguments as UserProfileEntity;
               return MaterialPageRoute(
                 builder: (_) => EditProfilePage(profile: profile),
+              );
+            case '/business/details':
+              final businessId = settings.arguments as String;
+              return MaterialPageRoute(
+                builder: (_) => BusinessDetailsPage(businessId: businessId),
               );
             default:
               return MaterialPageRoute(
