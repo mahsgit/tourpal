@@ -1,0 +1,43 @@
+name: tourpal
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: 
+  get_it: 
+  flutter_bloc: 
+  dartz: 
+  shared_preferences: 
+  equatable: 
+  cached_network_image: 
+  panorama_viewer: 
+  loading_animation_widget: 
+  video_player: 
+  chapasdk: 
+  
+  webview_flutter: 
+  google_generative_ai: 
+  flutter_markdown: 
+  chat_bubbles: 
+  bubble: 
+  just_audio: 
+  url_launcher:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: 
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - lib/asset/image.avif
+    - lib/asset/panorama2.webp

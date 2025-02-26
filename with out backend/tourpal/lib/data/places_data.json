@@ -1,0 +1,66 @@
+{
+  "places": [
+    {
+      "id": "kanchenjungha_id",
+      "title": "Kanchenjungha",
+      "location": "Sikkim, India",
+      "description": "A beautiful mountain peak with breathtaking views",
+      "price": 150,
+      "rating": 4.8,
+      "reviews": [
+        {
+          "user": "John Doe",
+          "rating": 5,
+          "comment": "Amazing experience!",
+          "photos": ["lib/asset/images.jpg"]
+        }
+      ],
+      "images": [
+        "lib/asset/images.jpg",
+        "lib/asset/images.jpg",
+        "lib/asset/images.jpg"
+      ],
+      "amenities": [
+        {
+          "name": "Parking",
+          "price": 10
+        },
+        {
+          "name": "Guide",
+          "price": 50
+        }
+      ]
+    },
+    {
+      "id": "coxs_bazar_id",
+      "title": "Cox's Bazar Sea Beach",
+      "location": "Bangladesh",
+      "description": "World's longest natural sea beach",
+      "price": 100,
+      "rating": 4.5,
+      "reviews": [
+        {
+          "user": "Jane Smith",
+          "rating": 4,
+          "comment": "Beautiful beach!",
+          "photos": ["lib/asset/images.jpg"]
+        }
+      ],
+      "images": [
+        "lib/asset/images.jpg",
+        "lib/asset/images.jpg"
+      ],
+      "amenities": [
+        {
+          "name": "Beach Chair",
+          "price": 5
+        },
+        {
+          "name": "Umbrella",
+          "price": 3
+        }
+      ]
+    }
+  ]
+}
+

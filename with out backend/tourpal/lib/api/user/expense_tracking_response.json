@@ -1,0 +1,19 @@
+{
+  "expenses": [
+    {
+      "id": "string",
+      "userId": "string",
+      "amount": "number",
+      "category": "string",
+      "description": "string",
+      "date": "string",
+      "isAutoTracked": "boolean",
+      "relatedBookingId": "string",
+      "currency": "string"
+    }
+  ],
+  "totalExpenses": "number",
+  "budgetLimit": "number",
+  "currency": "string"
+}
+

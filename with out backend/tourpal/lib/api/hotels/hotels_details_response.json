@@ -1,0 +1,74 @@
+{
+  "id": "string",
+  "name": "string",
+  "location": {
+    "address": "string",
+    "latitude": "number",
+    "longitude": "number"
+  },
+  "description": "string",
+  "images": [
+    {
+      "url": "string",
+      "is360": "boolean"
+    }
+  ],
+  "virtualTour": {
+    "enabled": "boolean",
+    "tourUrl": "string"
+  },
+  "amenities": ["string"],
+  "rating": "number",
+  "reviews": [
+    {
+      "id": "string",
+      "userId": "string",
+      "rating": "number",
+      "comment": "string",
+      "images": ["string"],
+      "verifiedStay": "boolean",
+      "createdAt": "string"
+    }
+  ],
+  "rooms": [
+    {
+      "id": "string",
+      "type": "string",
+      "description": "string",
+      "amenities": ["string"],
+      "price": "number",
+      "capacity": "number",
+      "available": "boolean",
+      "images": [
+        {
+          "url": "string",
+          "is360": "boolean"
+        }
+      ]
+    }
+  ],
+  "policies": {
+    "checkIn": "string",
+    "checkOut": "string",
+    "cancellation": "string"
+  },
+  "nearbyAttractions": [
+    {
+      "name": "string",
+      "distance": "number",
+      "type": "string"
+    }
+  ],
+  "advertisements": [
+    {
+      "id": "string",
+      "title": "string",
+      "description": "string",
+      "imageUrl": "string",
+      "linkUrl": "string",
+      "startDate": "string",
+      "endDate": "string"
+    }
+  ]
+}
+

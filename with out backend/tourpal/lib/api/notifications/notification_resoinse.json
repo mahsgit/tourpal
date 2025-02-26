@@ -1,0 +1,17 @@
+{
+  "notifications": [
+    {
+      "id": "string",
+      "userId": "string",
+      "type": "string",
+      "title": "string",
+      "message": "string",
+      "relatedEntityId": "string",
+      "relatedEntityType": "string",
+      "isRead": "boolean",
+      "createdAt": "string"
+    }
+  ],
+  "unreadCount": "number"
+}
+

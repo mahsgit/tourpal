@@ -1,0 +1,27 @@
+{
+  "userId": "string",
+  "destination": {
+    "country": "string",
+    "city": "string"
+  },
+  "travelType": "string",
+  "budget": "number",
+  "numberOfDays": "number",
+  "companionship": "string",
+  "preferences": ["string"],
+  "interests": ["string"],
+  "excludedActivities": ["string"],
+  "travelDates": {
+    "startDate": "string",
+    "endDate": "string"
+  },
+  "accommodation": {
+    "type": "string",
+    "preferences": ["string"]
+  },
+  "transportation": {
+    "preferred": ["string"]
+  },
+  "dietaryRestrictions": ["string"]
+}
+

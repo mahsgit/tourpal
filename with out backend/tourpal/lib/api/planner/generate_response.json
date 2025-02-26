@@ -1,0 +1,85 @@
+{
+  "plan": {
+    "id": "string",
+    "userId": "string",
+    "destination": {
+      "country": "string",
+      "city": "string",
+      "description": "string",
+      "images": [
+        {
+          "url": "string",
+          "is360": "boolean"
+        }
+      ],
+      "weather": {
+        "temperature": "number",
+        "condition": "string",
+        "season": "string"
+      }
+    },
+    "itinerary": [
+      {
+        "day": "number",
+        "date": "string",
+        "activities": [
+          {
+            "name": "string",
+            "description": "string",
+            "location": {
+              "name": "string",
+              "address": "string",
+              "latitude": "number",
+              "longitude": "number"
+            },
+            "duration": "string",
+            "cost": "number",
+            "image": "string",
+            "bookingUrl": "string",
+            "type": "string"
+          }
+        ],
+        "accommodation": {
+          "name": "string",
+          "type": "string",
+          "cost": "number",
+          "bookingUrl": "string"
+        },
+        "transportation": [
+          {
+            "type": "string",
+            "from": "string",
+            "to": "string",
+            "departureTime": "string",
+            "arrivalTime": "string",
+            "cost": "number",
+            "bookingUrl": "string"
+          }
+        ]
+      }
+    ],
+    "packingList": ["string"],
+    "localCuisines": [
+      {
+        "name": "string",
+        "description": "string",
+        "restaurants": [
+          {
+            "name": "string",
+            "cuisine": "string",
+            "priceRange": "string",
+            "address": "string",
+            "latitude": "number",
+            "longitude": "number"
+          }
+        ]
+      }
+    ],
+    "bestTimeToVisit": "string",
+    "estimatedTotalCost": "number",
+    "createdAt": "string",
+    "updatedAt": "string",
+    "isEditable": "boolean"
+  }
+}
+
