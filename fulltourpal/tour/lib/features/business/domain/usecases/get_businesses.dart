@@ -7,10 +7,14 @@ import '../repositories/business_repository.dart';
 class GetBusinessesParams {
   final int page;
   final int limit;
+  final String? query;
+  final String? category;
 
   GetBusinessesParams({
     this.page = 1,
     this.limit = 10,
+    this.query,
+    this.category,
   });
 }
 
@@ -26,6 +30,8 @@ class GetBusinesses implements UseCase<List<BusinessEntity>, GetBusinessesParams
     return await repository.getBusinesses(
       page: params.page,
       limit: params.limit,
+      query: params.query,
+      category: params.category,
     );
   }
 }

@@ -20,8 +20,10 @@ class BusinessRepositoryImpl implements BusinessRepository {
 
   @override
   Future<Either<Failure, List<BusinessEntity>>> getBusinesses({
+    String? category,
     int page = 1,
     int limit = 10,
+    String? query,
   }) async {
     if (await networkInfo.isConnected) {
       try {

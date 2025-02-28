@@ -15,6 +15,7 @@ class BusinessModel extends BusinessEntity {
     required List<String> media,
     required DateTime createdAt,
     required DateTime updatedAt,
+    required double price,
   }) : super(
           id: id,
           businessName: businessName,
@@ -28,6 +29,7 @@ class BusinessModel extends BusinessEntity {
           media: media,
           createdAt: createdAt,
           updatedAt: updatedAt,
+          price: price,
         );
 
   factory BusinessModel.fromJson(Map<String, dynamic> json) {
@@ -44,6 +46,7 @@ class BusinessModel extends BusinessEntity {
       media: List<String>.from(json['media'] ?? []),
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
+      price: json['price']?.toDouble() ?? 0.0,
     );
   }
 

@@ -31,3 +31,21 @@ class LoadMoreBusinesses extends BusinessEvent {
   List<Object> get props => [page, limit];
 }
 
+class SearchBusinesses extends BusinessEvent {
+  final String query;
+
+  const SearchBusinesses({required this.query});
+
+  @override
+  List<Object> get props => [query];
+}
+
+class FilterBusinessesByCategory extends BusinessEvent {
+  final String category;
+
+  const FilterBusinessesByCategory({required this.category});
+
+  @override
+  List<Object> get props => [category];
+}
+

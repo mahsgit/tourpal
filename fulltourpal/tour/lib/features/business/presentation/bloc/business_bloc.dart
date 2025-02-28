@@ -15,6 +15,8 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     on<LoadBusinesses>(_onLoadBusinesses);
     on<LoadBusinessDetails>(_onLoadBusinessDetails);
     on<LoadMoreBusinesses>(_onLoadMoreBusinesses);
+    on<SearchBusinesses>(_onSearchBusinesses);
+    on<FilterBusinessesByCategory>(_onFilterBusinessesByCategory);
   }
 
   Future<void> _onLoadBusinesses(
@@ -59,6 +61,30 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
         ),
       );
     }
+  }
+
+  Future<void> _onSearchBusinesses(
+    SearchBusinesses event,
+    Emitter<BusinessState> emit,
+  ) async {
+    emit(BusinessLoading());
+    final result = await getBusinesses(GetBusinessesParams(query: event.query));
+    result.fold(
+      (failure) => emit(BusinessError(message: failure.message)),
+      (businesses) => emit(BusinessesLoaded(businesses: businesses)),
+    );
+  }
+
+  Future<void> _onFilterBusinessesByCategory(
+    FilterBusinessesByCategory event,
+    Emitter<BusinessState> emit,
+  ) async {
+    emit(BusinessLoading());
+    final result = await getBusinesses(GetBusinessesParams(category: event.category.toLowerCase()));
+    result.fold(
+      (failure) => emit(BusinessError(message: failure.message)),
+      (businesses) => emit(BusinessesLoaded(businesses: businesses)),
+    );
   }
 }
 

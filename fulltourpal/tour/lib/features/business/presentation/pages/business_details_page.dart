@@ -30,7 +30,7 @@ class _BusinessDetailsPageState extends State<BusinessDetailsPage> {
   void _handleBookNow(BusinessEntity business) {
     Navigator.pushNamed(
       context,
-      '/booking',
+      '/business/booking',
       arguments: business,
     );
   }

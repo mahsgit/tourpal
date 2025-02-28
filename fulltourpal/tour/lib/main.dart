@@ -112,8 +112,6 @@
 //   }
 // }
 
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -131,6 +129,8 @@ import 'features/profile/domain/entities/user_profile_entity.dart';
 import 'features/business/presentation/pages/business_list_page.dart';
 import 'features/business/presentation/pages/business_details_page.dart';
 import 'features/business/presentation/bloc/business_bloc.dart';
+import 'features/business/presentation/pages/booking_page.dart';
+import 'features/business/domain/entities/business_entity.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -224,7 +224,12 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                 builder: (_) => BusinessDetailsPage(businessId: businessId),
               );
-            default:
+            case '/business/booking':
+              final business = settings.arguments as BusinessEntity;
+              return MaterialPageRoute(
+                builder: (_) => BookingPage(business: business),
+              );
+            default: 
               return MaterialPageRoute(
                 builder: (_) => const LoginPage(),
               );

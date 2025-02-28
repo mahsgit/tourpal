@@ -5,35 +5,34 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: 
-  get_it: 
-  flutter_bloc: 
-  dartz: 
-  shared_preferences: 
-  equatable: 
-  cached_network_image: 
-  panorama_viewer: 
-  loading_animation_widget: 
-  video_player: 
-  chapasdk: 
-  
-  webview_flutter: 
-  google_generative_ai: 
-  flutter_markdown: 
-  chat_bubbles: 
-  bubble: 
-  just_audio: 
-  url_launcher:
+  cupertino_icons: ^1.0.5
+  get_it: ^7.6.0
+  flutter_bloc: ^8.1.3
+  dartz: ^0.10.1
+  shared_preferences: ^2.2.0
+  equatable: ^2.0.5
+  cached_network_image: ^3.2.3
+  panorama_viewer: ^1.0.0
+  loading_animation_widget: ^1.2.0+4
+  video_player: ^2.7.0
+  chapasdk: ^0.0.4
+  webview_flutter: ^4.2.2
+  google_generative_ai: ^0.1.0
+  flutter_markdown: ^0.6.17
+  chat_bubbles: ^1.4.1
+  bubble: ^1.2.1
+  just_audio: ^0.9.34
+  url_launcher: ^6.1.12
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: 
+  flutter_lints: ^2.0.2
 
 flutter:
   uses-material-design: true
@@ -41,3 +40,4 @@ flutter:
   assets:
     - lib/asset/image.avif
     - lib/asset/panorama2.webp
+

@@ -14,6 +14,7 @@ class BusinessEntity extends Equatable {
   final List<String> media;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final double price;
 
   const BusinessEntity({
     required this.id,
@@ -28,6 +29,7 @@ class BusinessEntity extends Equatable {
     required this.media,
     required this.createdAt,
     required this.updatedAt,
+    required this.price,
   });
 
   @override
@@ -44,6 +46,7 @@ class BusinessEntity extends Equatable {
         media,
         createdAt,
         updatedAt,
+        price,
       ];
 }
 

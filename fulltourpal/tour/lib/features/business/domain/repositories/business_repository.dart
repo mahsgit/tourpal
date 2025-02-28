@@ -6,6 +6,8 @@ abstract class BusinessRepository {
   Future<Either<Failure, List<BusinessEntity>>> getBusinesses({
     int page = 1,
     int limit = 10,
+    String? query,
+    String? category,
   });
   Future<Either<Failure, BusinessEntity>> getBusinessDetails(String businessId);
 }

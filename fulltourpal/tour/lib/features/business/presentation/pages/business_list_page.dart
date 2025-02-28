@@ -5,6 +5,7 @@ import '../bloc/business_event.dart';
 import '../bloc/business_state.dart';
 import '../widgets/business_card.dart';
 import '../widgets/service_category.dart';
+import '../widgets/search_bar.dart';
 
 class BusinessListPage extends StatefulWidget {
   const BusinessListPage({Key? key}) : super(key: key);
@@ -17,6 +18,8 @@ class _BusinessListPageState extends State<BusinessListPage> {
   final ScrollController _scrollController = ScrollController();
   int _currentPage = 1;
   static const int _itemsPerPage = 10;
+  String _selectedCategory = 'Hotels';
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -42,6 +45,25 @@ class _BusinessListPageState extends State<BusinessListPage> {
     }
   }
 
+  void _onSearch(String query) {
+    setState(() {
+      _searchQuery = query;
+    });
+    context.read<BusinessBloc>().add(SearchBusinesses(query: query));
+  }
+
+  void _onCategorySelected(String category) {
+    setState(() {
+      _selectedCategory = category;
+    });
+    if (category == 'Hotels') {
+      context.read<BusinessBloc>().add(FilterBusinessesByCategory(category: 'hotel'));
+    } else {
+      // For other categories, load all businesses (for now)
+      context.read<BusinessBloc>().add(LoadBusinesses());
+    }
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -64,9 +86,7 @@ class _BusinessListPageState extends State<BusinessListPage> {
                     Row(
                       children: [
                         const CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            'https://example.com/profile.jpg',
-                          ),
+                          backgroundImage: AssetImage('lib/asset/image.avif'),
                         ),
                         const SizedBox(width: 12),
                         Column(
@@ -84,12 +104,22 @@ class _BusinessListPageState extends State<BusinessListPage> {
                         ),
                         const Spacer(),
                         IconButton(
+                          icon: const Icon(Icons.person_outline),
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/profile');
+                          },
+                        ),
+                        IconButton(
                           icon: const Icon(Icons.notifications_outlined),
                           onPressed: () {
                             // Handle notifications
                           },
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 24),
+                    CustomSearchBar(
+                      onSearch: _onSearch,
                     ),
                     const SizedBox(height: 24),
                     Text(
@@ -104,16 +134,14 @@ class _BusinessListPageState extends State<BusinessListPage> {
                           ServiceCategory(
                             icon: Icons.hotel,
                             label: 'Hotels',
-                            isActive: true,
-                            onTap: () {
-                              // Handle hotel category tap
-                            },
+                            isActive: _selectedCategory == 'Hotels',
+                            onTap: () => _onCategorySelected('Hotels'),
                           ),
                           ServiceCategory(
                             icon: Icons.flight,
                             label: 'Flights',
+                            isActive: _selectedCategory == 'Flights',
                             onTap: () {
-                              // Coming soon
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text('Coming soon!'),
@@ -124,8 +152,8 @@ class _BusinessListPageState extends State<BusinessListPage> {
                           ServiceCategory(
                             icon: Icons.car_rental,
                             label: 'Car Rental',
+                            isActive: _selectedCategory == 'Car Rental',
                             onTap: () {
-                              // Coming soon
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text('Coming soon!'),
@@ -164,6 +192,24 @@ class _BusinessListPageState extends State<BusinessListPage> {
                 }
 
                 if (state is BusinessesLoaded) {
+                  final filteredBusinesses = state.businesses.where((business) {
+                    final matchesSearch = business.businessName
+                        .toLowerCase()
+                        .contains(_searchQuery.toLowerCase());
+                    final matchesCategory = _selectedCategory == 'Hotels'
+                        ? business.businessType.toLowerCase() == 'hotel'
+                        : true; // For now, only filter Hotels, show all for other categories
+                    return matchesSearch && matchesCategory;
+                  }).toList();
+
+                  if (filteredBusinesses.isEmpty) {
+                    return const SliverFillRemaining(
+                      child: Center(
+                        child: Text('No businesses found'),
+                      ),
+                    );
+                  }
+
                   return SliverPadding(
                     padding: const EdgeInsets.all(16.0),
                     sliver: SliverGrid(
@@ -172,20 +218,20 @@ class _BusinessListPageState extends State<BusinessListPage> {
                         crossAxisCount: 2,
                         mainAxisSpacing: 16.0,
                         crossAxisSpacing: 16.0,
-                        childAspectRatio: 0.75,
+                        childAspectRatio: 0.8,
                       ),
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                          if (index >= state.businesses.length) {
+                          if (index >= filteredBusinesses.length) {
                             return const Center(
                               child: CircularProgressIndicator(),
                             );
                           }
                           return BusinessCard(
-                            business: state.businesses[index],
+                            business: filteredBusinesses[index],
                           );
                         },
-                        childCount: state.businesses.length +
+                        childCount: filteredBusinesses.length +
                             (state is BusinessLoading ? 1 : 0),
                       ),
                     ),
