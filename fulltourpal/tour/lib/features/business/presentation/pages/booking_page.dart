@@ -59,7 +59,6 @@ class _BookingPageState extends State<BookingPage> {
         checkOut: _checkOutDate!,
         rooms: _rooms,
         onConfirm: () {
-          // Handle booking confirmation
           Navigator.of(context).pushNamedAndRemoveUntil(
             '/businesses',
             (route) => false,
@@ -186,44 +185,42 @@ class _BookingPageState extends State<BookingPage> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 4,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Total',
-                  style: Theme.of(context).textTheme.titleMedium,
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Total',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    Text(
+                      '${widget.business.price * _rooms} ETB',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                    ),
+                  ],
                 ),
-                Text(
-                  '${widget.business.price * _rooms} ETB',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Theme.of(context).primaryColor,
-                      ),
+              ),
+              SizedBox(
+                width: 120,
+                child: ElevatedButton(
+                  onPressed: _showConfirmationModal,
+                  child: const Text('Book Now'),
                 ),
-              ],
-            ),
-            ElevatedButton(
-              onPressed: _showConfirmationModal,
-              child: const Text('Book Now'),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+

@@ -11,6 +11,11 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Trigger profile loading when the page is opened
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProfileBloc>().add(LoadProfile());
+    });
+
     return Scaffold(
       body: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {
@@ -23,7 +28,7 @@ class ProfilePage extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          if (state is ProfileLoading) {
+          if (state is ProfileInitial || state is ProfileLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is ProfileLoaded) {
             return SafeArea(
@@ -83,6 +88,8 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
             );
+          } else if (state is ProfileError) {
+            return Center(child: Text('Error: ${state.message}'));
           }
           return const Center(child: Text('Something went wrong'));
         },

@@ -86,7 +86,7 @@ class _BusinessListPageState extends State<BusinessListPage> {
                     Row(
                       children: [
                         const CircleAvatar(
-                          backgroundImage: AssetImage('lib/asset/image.avif'),
+                          backgroundImage: AssetImage('image/image.png'),
                         ),
                         const SizedBox(width: 12),
                         Column(
