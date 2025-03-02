@@ -58,9 +58,7 @@ class _BusinessDetailsPageState extends State<BusinessDetailsPage> {
                   pinned: true,
                   flexibleSpace: FlexibleSpaceBar(
                     background: BusinessGallery(
-                      images: business.media.isEmpty
-                          ? ['https://via.placeholder.com/400x300']
-                          : business.media,
+                      businessId: business.id,
                     ),
                   ),
                 ),

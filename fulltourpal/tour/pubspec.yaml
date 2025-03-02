@@ -48,6 +48,9 @@ dependencies:
   # Value Equality
   equatable: 
   image_picker: 
+  url_launcher:
+  # loading_animation_widget:
+  # panorama:
 
 dev_dependencies:
   flutter_test:

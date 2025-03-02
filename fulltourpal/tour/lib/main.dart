@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:tour/features/ai_planner/presentation/bloc/ai_planner_bloc.dart';
+// import 'package:tour/features/ai_planner/presentation/pages/ai_planner_page.dart';
+
 import 'package:tour/features/auth/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tour/features/auth/auth/presentation/pages/login_page.dart';
 import 'package:tour/features/auth/auth/presentation/pages/register_page.dart';
+import 'package:tour/features/home/home.dart';
+import 'package:tour/features/trip_advisor/presentation/bloc/trip_bloc.dart';
+import 'package:tour/features/trip_advisor/presentation/page/trip_page.dart';
+// import 'package:tour/features/trip_advisor/presentation/bloc/trip_bloc.dart';
+// import 'package:tour/features/trip_advisor/presentation/page/trip_page.dart';
 import 'injection_container.dart' as di;
 
 // Features
@@ -35,6 +43,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<ProfileBloc>(
           create: (context) => di.sl<ProfileBloc>(),
+        ),
+        BlocProvider<TripPlannerBloc>(
+          create: (context) => di.sl<TripPlannerBloc>(),
         ),
         BlocProvider<BusinessBloc>(
           create: (context) => di.sl<BusinessBloc>(),
@@ -95,9 +106,14 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                 builder: (_) => const RegisterPage(),
               );
-            case '/profile':
+           
+            case '/home':
               return MaterialPageRoute(
-                builder: (_) => const ProfilePage(),
+                builder: (_) => const HomePage(),
+              );
+               case '/aiplanner':
+              return MaterialPageRoute(
+                builder: (_) => const TripPlannerPage(),
               );
             case '/profile/edit':
               final profile = settings.arguments as UserProfileEntity;
