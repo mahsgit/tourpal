@@ -53,12 +53,12 @@ class ProfileHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Row(
+         const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.star, color: Colors.amber, size: 20),
-              const SizedBox(width: 4),
-              const Text(
+               Icon(Icons.star, color: Colors.amber, size: 20),
+               SizedBox(width: 4),
+               Text(
                 'Premium User',
                 style: TextStyle(
                   color: Colors.amber,

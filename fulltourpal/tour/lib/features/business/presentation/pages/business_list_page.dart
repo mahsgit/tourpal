@@ -140,10 +140,14 @@ class _BusinessListPageState extends State<BusinessListPage> {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        mainAxisSpacing: 16.0,
-                        crossAxisSpacing: 16.0,
-                        childAspectRatio: 0.75,
+    mainAxisSpacing: 16.0,
+    crossAxisSpacing: 16.0,
+    childAspectRatio: 0.7,
                       ),
+
+
+
+
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           if (index >= filteredBusinesses.length) {

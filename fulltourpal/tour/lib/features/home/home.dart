@@ -1,10 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-// import 'package:tour/features/ai_planner/presentation/pages/ai_planner_page.dart';
+import 'package:tour/features/ai_planner/presentation/pages/ai_planner_page.dart';
 import 'package:tour/features/home/widget/explore.dart';
 import 'package:tour/features/home/widget/trending.dart';
-import 'package:tour/features/trip_advisor/presentation/page/trip_page.dart';
-// import 'package:tour/features/trip_advisor/presentation/page/trip_page.dart';
 import 'package:tour/features/vr/page/vr_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,6 +27,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
     // Get a random image from the list when the page is loaded
     _randomImageUrl = _imageUrls[Random().nextInt(_imageUrls.length)];
   }
@@ -49,7 +48,7 @@ class _HomePageState extends State<HomePage> {
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const TripPlannerPage()),
+          MaterialPageRoute(builder: (context) => const AIPlannerPage()),
         );
         break;
       default:
@@ -81,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   children: [
                     CircleAvatar(
-                      backgroundImage: NetworkImage(_randomImageUrl), // Display random image here
+                      backgroundImage: NetworkImage('https://picsum.photos/200/300?1'), // Display random image here
                     ),
                     const SizedBox(width: 12),
                     Column(
@@ -139,25 +138,22 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     ExploreCard(
                       title: 'Hotels',
-                      image: _randomImageUrl, //
+                      image: 'https://picsum.photos/200/300?2', //
                       onTap: () => _navigateToHotels(context),
                     ),
                     ExploreCard(
                       title: 'Restaurant',
-                      image: _randomImageUrl,
-                      // image: 'https://via.placeholder.com/300x200',
+                      image: 'https://picsum.photos/200/300?3',
                       onTap: () => _showComingSoon(context),
                     ),
                     ExploreCard(
                       title: 'Attraction',
-                      image: _randomImageUrl,
-                      // image: 'https://via.placeholder.com/300x200',
+                      image: 'https://picsum.photos/200/300?4',
                       onTap: () => _showComingSoon(context),
                     ),
                     ExploreCard(
                       title: 'Tour Guide',
-                      image: _randomImageUrl,
-                      // image: 'https://via.placeholder.com/300x200',
+                      image: 'https://picsum.photos/200/300?5',
                       onTap: () => _showComingSoon(context),
                     ),
                   ],
@@ -200,7 +196,6 @@ class _HomePageState extends State<HomePage> {
                   return TrendingPlaceCard(
                     title: 'African Union',
                     image: _randomImageUrl,
-                    // image: 'https://via.placeholder.com/300x200',
                     rating: 4.7,
                     price: 1200,
                     onTap: () => _showComingSoon(context),

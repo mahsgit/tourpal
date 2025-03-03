@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tour/features/profile/domain/entities/user_profile_entity.dart';
 import '../bloc/profile_bloc.dart';
 import '../bloc/profile_event.dart';
 import '../bloc/profile_state.dart';
@@ -81,7 +82,7 @@ class ProfilePage extends StatelessWidget {
                     ProfileMenuItem(
                       icon: Icons.delete,
                       title: 'Delete Account',
-                      onTap: () => _showDeleteConfirmation(context),
+                      onTap: () => _showDeleteConfirmation(context, state.profile),
                       textColor: Colors.red,
                     ),
                   ],
@@ -97,7 +98,7 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context) {
+  void _showDeleteConfirmation(BuildContext context, UserProfileEntity profile) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -112,7 +113,7 @@ class ProfilePage extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              context.read<ProfileBloc>().add(DeleteProfileRequested());
+              context.read<ProfileBloc>().add(DeleteProfileRequested(profile: profile));
               Navigator.pop(context);
             },
             child: const Text(

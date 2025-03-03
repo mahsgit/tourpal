@@ -38,39 +38,39 @@ class ProfileRepositoryImpl implements ProfileRepository {
       }
     }
   }
-
-  @override
-  Future<Either<Failure, UserProfileEntity>> updateProfile(
-    UserProfileEntity profile,
-  ) async {
-    if (await networkInfo.isConnected) {
-      try {
-        final updatedProfile = await remoteDataSource.updateProfile(
-          profile as UserProfileModel,
-        );
-        localDataSource.cacheProfile(updatedProfile);
-        return Right(updatedProfile);
-      } on ServerException catch (e) {
-        return Left(ServerFailure(e.message));
-      }
-    } else {
-      return Left(NetworkFailure());
+@override
+Future<Either<Failure, UserProfileEntity>> updateProfile(
+  UserProfileEntity profile,
+) async {
+  if (await networkInfo.isConnected) {
+    try {
+      // Convert entity to model properly
+      final updatedProfile = await remoteDataSource.updateProfile(
+        profile.toModel()  // Use conversion method instead of cast
+      );
+      localDataSource.cacheProfile(updatedProfile);
+      return Right(updatedProfile.toEntity());  // Convert back to entity if needed
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
     }
-  }
-
-  @override
-  Future<Either<Failure, void>> deleteProfile() async {
-    if (await networkInfo.isConnected) {
-      try {
-        await remoteDataSource.deleteProfile();
-        await localDataSource.clearProfile();
-        return const Right(null);
-      } on ServerException catch (e) {
-        return Left(ServerFailure(e.message));
-      }
-    } else {
-      return Left(NetworkFailure());
-    }
+  } else {
+    return Left(NetworkFailure());
   }
 }
 
+@override
+Future<Either<Failure, void>> deleteProfile(UserProfileEntity profile) async {
+  if (await networkInfo.isConnected) {
+    try {
+      // Convert entity to model properly
+      await remoteDataSource.deleteProfile(profile.toModel());
+      await localDataSource.clearProfile();
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    }
+  } else {
+    return Left(NetworkFailure());
+  }
+}
+}

@@ -1,17 +1,3 @@
-// class Urls {
-//   static const String baseUrl = 'https://tourpal-1.onrender.com/api/auth';
-  
-//   static const String register = '$baseUrl/register';
-//   static const String login = '$baseUrl/login';
-//   static const String googleLogin = '$baseUrl/google';
-//   static const String logout = '$baseUrl/logout';
-//   static const String logoutAll = '$baseUrl/logout/all';
-//   static const String refreshToken = '$baseUrl/refresh-token';
-//   static const String forgotPassword = '$baseUrl/forgot-password';
-//   static const String resetPassword = '$baseUrl/reset-password';
-//   static const String validateEmail = '$baseUrl/validate-email';
-//   static const String getCurrentProfile = '$baseUrl/api/users/me';
-// }
 
 class Urls {
   static const String baseUrl = 'https://tourpal-1.onrender.com/api';
@@ -30,10 +16,18 @@ class Urls {
 
   // Profile endpoints
   static const String getCurrentProfile = '$baseUrl/users/me';
-  static const String updateProfile = '$baseUrl/users/me';
-  static const String deleteProfile = '$baseUrl/users/me';
+  static const String updateProfile = '$baseUrl/users';
+  static const String deleteProfile = '$baseUrl/users';
 
   //business
   static const String businesses = '$baseUrl/businesses';
+
+  //room
+   static const String getRoomTypes = '$baseUrl/room-types/business';
+  static const String getRoomTypeDetails = '$baseUrl/room-types';
+  static const String searchRoomTypes = '$baseUrl/room-types/search';
+
+  //ai
+  static const String aiPlanner = '$baseUrl/aiplan/generate';
 }
 

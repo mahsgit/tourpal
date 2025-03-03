@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:tour/features/profile/data/models/address_model.dart';
 
 class AddressEntity extends Equatable {
   final String? street;
@@ -17,5 +18,17 @@ class AddressEntity extends Equatable {
 
   @override
   List<Object?> get props => [street, city, state, postalCode, country];
+
+AddressModel toModel() {
+    return AddressModel(
+      street: street,
+      city: city,
+      state: state,
+      postalCode: postalCode,
+      country: country,
+    );
+  }
+
 }
+
 

@@ -42,11 +42,7 @@ if (response.statusCode == 200) {
     } else {
       throw ServerException(message: json.decode(response.body)['message'] ?? 'Server error');
     }
-    // if (response.statusCode == 200) {
-    //   return UserModel.fromJson(json.decode(response.body)['data']);
-    // } else {
-    //   throw ServerException(message: json.decode(response.body)['message']);
-    // }
+  
   }
 
   @override

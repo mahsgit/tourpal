@@ -10,7 +10,7 @@ import '../models/user_profile_model.dart';
 abstract class ProfileRemoteDataSource {
   Future<UserProfileModel> getCurrentProfile();
   Future<UserProfileModel> updateProfile(UserProfileModel profile);
-  Future<void> deleteProfile();
+  Future<void> deleteProfile(UserProfileModel profile);
 }
 
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
@@ -54,7 +54,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   Future<UserProfileModel> updateProfile(UserProfileModel profile) async {
     final headers = await _getAuthHeaders();
     final response = await client.put(
-      Uri.parse(Urls.updateProfile),
+      Uri.parse('${Urls.updateProfile}/${profile.id}'),
       headers: headers,
       body: json.encode(profile.toJson()),
     );
@@ -69,10 +69,10 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   }
 
   @override
-  Future<void> deleteProfile() async {
+  Future<void> deleteProfile(UserProfileModel profile) async {
     final headers = await _getAuthHeaders();
     final response = await client.delete(
-      Uri.parse(Urls.deleteProfile),
+      Uri.parse('${Urls.deleteProfile}/${profile.id}'),
       headers: headers,
     );
 

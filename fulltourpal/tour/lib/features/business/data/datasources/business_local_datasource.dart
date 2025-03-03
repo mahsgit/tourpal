@@ -43,7 +43,7 @@ class BusinessLocalDataSourceImpl implements BusinessLocalDataSource {
   @override
   Future<void> cacheBusinesses(List<BusinessModel> businesses) async {
     final List<Map<String, dynamic>> jsonList = businesses
-        .map((business) => (business as BusinessModel).toJson())
+        .map((business) => (business).toJson())
         .toList();
     await sharedPreferences.setString(
       CACHED_BUSINESSES_KEY,

@@ -1,48 +1,4 @@
-// import 'dart:convert';
-// import 'package:shared_preferences/shared_preferences.dart';
-// import '../../../../../core/error/exceptions.dart';
-// import '../models/user_model.dart';
 
-// abstract class AuthLocalDataSource {
-//   Future<void> cacheUser(UserModel user);
-//   Future<UserModel> getLastUser();
-//   Future<void> removeUser();
-// }
-
-// class AuthLocalDataSourceImpl implements AuthLocalDataSource {
-//   final SharedPreferences sharedPreferences;
-
-//   AuthLocalDataSourceImpl({required this.sharedPreferences});
-
-//   // @override
-//   // Future<void> cacheUser(UserModel user) {
-//   //   return sharedPreferences.setString(
-//   //     'CACHED_USER',
-//   //     json.encode(user.toJson()),
-//   //   );
-//   // }
-
-//   @override
-// Future<void> cacheUser(UserModel user) async {
-//   final jsonString = json.encode(user.toJson());
-//   await sharedPreferences.setString('CACHED_USER', jsonString);
-// }
-
-//   @override
-//   Future<UserModel> getLastUser() {
-//     final jsonString = sharedPreferences.getString('CACHED_USER');
-//     if (jsonString != null) {
-//       return Future.value(UserModel.fromJson(json.decode(jsonString)));
-//     } else {
-//       throw CacheException(message: 'No cached user found');
-//     }
-//   }
-
-//   @override
-//   Future<void> removeUser() {
-//     return sharedPreferences.remove('CACHED_USER');
-//   }
-// }
 
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';

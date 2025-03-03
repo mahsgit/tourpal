@@ -19,5 +19,12 @@ class UpdateProfileRequested extends ProfileEvent {
   List<Object> get props => [profile];
 }
 
-class DeleteProfileRequested extends ProfileEvent {}
+class DeleteProfileRequested extends ProfileEvent {
+  final UserProfileEntity profile;
+
+  const DeleteProfileRequested({required this.profile});
+
+  @override
+  List<Object> get props => [profile];
+}
 

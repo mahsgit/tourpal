@@ -283,7 +283,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
           TextButton(
             onPressed: () {
-              context.read<ProfileBloc>().add(DeleteProfileRequested());
+              context.read<ProfileBloc>().add(DeleteProfileRequested( profile: widget.profile));
               Navigator.pop(context); // Close dialog
             },
             child: const Text(

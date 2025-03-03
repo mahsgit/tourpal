@@ -36,7 +36,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     on<DeleteProfileRequested>((event, emit) async {
       emit(ProfileLoading());
-      final result = await deleteProfile(NoParams());
+      final result = await deleteProfile(event.profile);
       result.fold(
         (failure) => emit(ProfileError(message: failure.message)),
         (_) => emit(ProfileDeleted()),

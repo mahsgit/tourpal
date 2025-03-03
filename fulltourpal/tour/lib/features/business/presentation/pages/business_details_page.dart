@@ -114,30 +114,66 @@ class _BusinessDetailsPageState extends State<BusinessDetailsPage> {
           return const SizedBox.shrink();
         },
       ),
-      bottomNavigationBar: BlocBuilder<BusinessBloc, BusinessState>(
-        builder: (context, state) {
-          if (state is BusinessDetailsLoaded) {
-            return Container(
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 4,
-                    offset: const Offset(0, -2),
+
+      // Updated bottomNavigationBar section
+bottomNavigationBar: BlocBuilder<BusinessBloc, BusinessState>(
+  builder: (context, state) {
+    if (state is BusinessDetailsLoaded) {
+      return Container(
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 4,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: OutlinedButton(
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/room',
+                    arguments: state.business.id,
+                  );
+                },
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  side: BorderSide(
+                    color: Theme.of(context).primaryColor),
+                ),
+                child: Text(
+                  'View Rooms',
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
                   ),
-                ],
-              ),
+                ),
+              )),
+              const SizedBox(width: 16.0),
+            Expanded(
               child: ElevatedButton(
                 onPressed: () => _handleBookNow(state.business),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
                 child: const Text('Book Now'),
               ),
-            );
-          }
-          return const SizedBox.shrink();
-        },
-      ),
+            ),
+          
+        ],
+        ),
+        );
+      
+    }
+    return const SizedBox.shrink();
+  },
+),
+
     );
   }
 }

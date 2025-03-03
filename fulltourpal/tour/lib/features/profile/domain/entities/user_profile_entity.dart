@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:tour/features/profile/data/models/user_profile_model.dart';
 import 'address_entity.dart';
 import 'profile_picture_entity.dart';
 
@@ -45,5 +46,37 @@ class UserProfileEntity extends Equatable {
       ];
 
   String get fullName => '$firstName $lastName';
+   UserProfileModel toModel() {
+    return UserProfileModel(
+      id: id,
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber: phoneNumber,
+      nationality:nationality,
+      profilePicture: profilePicture?.toModel(),
+      address: address?.toModel(),
+      registrationDate: registrationDate,
+      isComplete: isComplete,
+      emailVerified: emailVerified,
+    );
+
+
+}
+  UserProfileEntity toEntity() {
+    return UserProfileEntity(
+      id: id,
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber:phoneNumber,
+      nationality: nationality,
+      profilePicture: profilePicture,
+      address: address,
+      registrationDate: registrationDate,
+      isComplete: isComplete,
+      emailVerified: emailVerified,
+    );
 }
 
+}

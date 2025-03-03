@@ -4,12 +4,12 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:tour/features/ai_planner/data/datasources/ai_planner_local_data_source.dart';
-// import 'package:tour/features/ai_planner/data/datasources/ai_planner_remote_data_source.dart';
-// import 'package:tour/features/ai_planner/data/repositories/ai_planner_repository_impl.dart';
-// import 'package:tour/features/ai_planner/domain/repositories/ai_planner_repository.dart';
-// import 'package:tour/features/ai_planner/domain/usecases/generate_itinerary.dart';
-// import 'package:tour/features/ai_planner/presentation/bloc/ai_planner_bloc.dart';
+import 'package:tour/features/ai_planner/data/datasources/ai_planner_local_data_source.dart';
+import 'package:tour/features/ai_planner/data/datasources/ai_planner_remote_data_source.dart';
+import 'package:tour/features/ai_planner/data/repositories/ai_planner_repository_impl.dart';
+import 'package:tour/features/ai_planner/domain/repositories/ai_planner_repository.dart';
+import 'package:tour/features/ai_planner/domain/usecases/generate_itinerary.dart';
+import 'package:tour/features/ai_planner/presentation/bloc/ai_planner_bloc.dart';
 import 'package:tour/features/auth/auth/data/datasources/auth_local_datasource.dart';
 import 'package:tour/features/auth/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:tour/features/auth/auth/data/repositories/auth_repository_impl.dart';
@@ -23,12 +23,20 @@ import 'package:tour/features/auth/auth/domain/usecases/register.dart';
 import 'package:tour/features/auth/auth/domain/usecases/reset_password.dart';
 import 'package:tour/features/auth/auth/domain/usecases/validate_email.dart';
 import 'package:tour/features/auth/auth/presentation/bloc/auth_bloc.dart';
-import 'package:tour/features/trip_advisor/data/data_source/gemini_datasource.dart';
-import 'package:tour/features/trip_advisor/data/data_source/local.dart';
-import 'package:tour/features/trip_advisor/data/repository/trip_repo_impl.dart';
-import 'package:tour/features/trip_advisor/domain/repository/trip_repo.dart';
-import 'package:tour/features/trip_advisor/domain/usecase/gemini_usecase.dart';
-import 'package:tour/features/trip_advisor/presentation/bloc/trip_bloc.dart';
+import 'package:tour/features/rooms/data/datasources/room_local_data_source.dart';
+import 'package:tour/features/rooms/data/datasources/room_remote_data_source.dart';
+import 'package:tour/features/rooms/data/repositories/room_repository_impl.dart';
+import 'package:tour/features/rooms/domain/repositories/room_repository.dart';
+import 'package:tour/features/rooms/domain/usecases/get_room_type_details.dart';
+import 'package:tour/features/rooms/domain/usecases/get_room_types.dart';
+import 'package:tour/features/rooms/domain/usecases/search_room_types.dart';
+import 'package:tour/features/rooms/presentation/bloc/room_bloc.dart';
+// import 'package:tour/features/trip_advisor/data/data_source/gemini_datasource.dart';
+// import 'package:tour/features/trip_advisor/data/data_source/local.dart';
+// import 'package:tour/features/trip_advisor/data/repository/trip_repo_impl.dart';
+// import 'package:tour/features/trip_advisor/domain/repository/trip_repo.dart';
+// import 'package:tour/features/trip_advisor/domain/usecase/gemini_usecase.dart';
+// import 'package:tour/features/trip_advisor/presentation/bloc/trip_bloc.dart';
 
 // Core
 import 'core/network/network_info.dart';
@@ -69,6 +77,9 @@ Future<void> init() async {
 
   // AI Planner
   await _initAIPlanner();
+
+  // Room
+  await _initRoom();
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
@@ -195,69 +206,111 @@ Future<void> _initBusiness() async {
 
 
 
-//  Future <void> _initAIPlanner() async {
-//   // Bloc
-//   sl.registerFactory(
-//     () => AIPlannerBloc(
-//       generateItinerary: sl(),
-//     ),
-//   );
-
-//   // Use cases
-//   sl.registerLazySingleton(() => GenerateItinerary(sl()));
-
-//   // Repository
-//   sl.registerLazySingleton<AIPlannerRepository>(
-//     () => AIPlannerRepositoryImpl(
-//       remoteDataSource: sl(),
-//       localDataSource: sl(),
-//       networkInfo: sl(),
-//     ),
-//   );
-
-//   // Data sources
-//   sl.registerLazySingleton<AIPlannerRemoteDataSource>(
-//     () => AIPlannerRemoteDataSourceImpl(
-//       client: sl(),
-//       authLocalDataSource: sl(),
-//     ),
-//   );
-  
-//   sl.registerLazySingleton<AIPlannerLocalDataSource>(
-//     () => AIPlannerLocalDataSourceImpl(sharedPreferences: sl()),
-//   );
-//  }
- 
-
  Future <void> _initAIPlanner() async {
   // Bloc
   sl.registerFactory(
-    () => TripPlannerBloc(
-      generateItineraryUseCase: sl(),
-      repository: sl(),
+    () => AIPlannerBloc(
+      generateItinerary: sl(),
     ),
   );
-
 
   // Use cases
   sl.registerLazySingleton(() => GenerateItinerary(sl()));
 
   // Repository
-  sl.registerLazySingleton<ItineraryRepository>(
-    () => ItineraryRepositoryImpl(
-      geminiApi: sl(),
-      localStorage: sl(),
+  sl.registerLazySingleton<AIPlannerRepository>(
+    () => AIPlannerRepositoryImpl(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+      networkInfo: sl(),
     ),
   );
 
   // Data sources
-  sl.registerLazySingleton<GeminiApi>(
-    () => GeminiApi(
-      apiKey: const String.fromEnvironment('AIzaSyCJJDJnHk6kPtYs1pT6WKqLF37AS0nM9LE'),
+  sl.registerLazySingleton<AIPlannerRemoteDataSource>(
+    () => AIPlannerRemoteDataSourceImpl(
+      client: sl(),
+      authLocalDataSource: sl(),
+    ),
+  );
+  
+  sl.registerLazySingleton<AIPlannerLocalDataSource>(
+    () => AIPlannerLocalDataSourceImpl(sharedPreferences: sl()),
+  );
+ }
+ 
+
+//  Future <void> _initAIPlanner() async {
+//   // Bloc
+//   sl.registerFactory(
+//     () => TripPlannerBloc(
+//       generateItineraryUseCase: sl(),
+//       repository: sl(),
+//     ),
+//   );
+
+
+//   // Use cases
+//   sl.registerLazySingleton(() => GenerateItinerary(sl()));
+
+//   // Repository
+//   sl.registerLazySingleton<ItineraryRepository>(
+//     () => ItineraryRepositoryImpl(
+//       geminiApi: sl(),
+//       localStorage: sl(),
+//     ),
+//   );
+
+//   // Data sources
+//   sl.registerLazySingleton<GeminiApi>(
+//     () => GeminiApi(
+//       apiKey: const String.fromEnvironment('AIzaSyCJJDJnHk6kPtYs1pT6WKqLF37AS0nM9LE'),
+//     ),
+//   );
+
+//   sl.registerLazySingleton<LocalStorage>(
+//     () => LocalStorageImpl(prefs: sl()),
+//   );
+//  }
+
+
+
+Future<void> _initRoom() async {
+  // Bloc
+  sl.registerFactory<RoomBloc>(
+    () => RoomBloc(
+      getRoomTypes: sl<GetRoomTypes>(),
+      searchRoomTypes: sl<SearchRoomTypes>(),
+      getRoomTypeDetails: sl<GetRoomTypeDetails>(),
     ),
   );
 
-  sl.registerLazySingleton<LocalStorage>(
-    () => LocalStorageImpl(prefs: sl()),
+  // Use cases
+  sl.registerLazySingleton<GetRoomTypes>(() => GetRoomTypes(sl<RoomRepository>()));
+  sl.registerLazySingleton<SearchRoomTypes>(() => SearchRoomTypes(sl<RoomRepository>()));
+  sl.registerLazySingleton<GetRoomTypeDetails>(() => GetRoomTypeDetails(sl<RoomRepository>()));
+
+  // Repository
+  sl.registerLazySingleton<RoomRepository>(
+    () => RoomRepositoryImpl(
+      remoteDataSource: sl<RoomRemoteDataSource>(),
+      localDataSource: sl<RoomLocalDataSource>(),
+      networkInfo: sl<NetworkInfo>(),
+    ),
   );
- }
+
+  // Data sources
+  sl.registerLazySingleton<RoomRemoteDataSource>(
+    () => RoomRemoteDataSourceImpl(
+       client: sl(),
+      authLocalDataSource: sl(),
+    ),
+  );
+
+
+  
+  
+  sl.registerLazySingleton<RoomLocalDataSource>(
+    () => RoomLocalDataSourceImpl(sharedPreferences: sl<SharedPreferences>()),
+  );
+}
