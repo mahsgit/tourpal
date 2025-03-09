@@ -1,6 +1,4 @@
 // import 'package:flutter/material.dart';
-// import 'package:tour/features/vr/panorama.dart';
-// // import '../widgets/vr_place_card.dart';
 
 // class VrExplorePage extends StatelessWidget {
 //   const VrExplorePage({Key? key}) : super(key: key);
@@ -11,11 +9,10 @@
 //       appBar: AppBar(
 //         title: const Text('VR Exploration'),
 //       ),
-//       body: SingleChildScrollView(
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Padding(
+//       body: CustomScrollView(
+//         slivers: [
+//           SliverToBoxAdapter(
+//             child: Padding(
 //               padding: const EdgeInsets.all(16.0),
 //               child: Column(
 //                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,42 +31,119 @@
 //                 ],
 //               ),
 //             ),
-//             GridView.builder(
-//               padding: const EdgeInsets.all(16),
-//               shrinkWrap: true,
-//               physics: const NeverScrollableScrollPhysics(),
-//               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//                 crossAxisCount: 2,
-//                 childAspectRatio: 0.75,
-//                 crossAxisSpacing: 16,
-//                 mainAxisSpacing: 16,
-//               ),
-//               itemCount: dummyPlaces.length,
-//               itemBuilder: (context, index) {
-//                 final place = dummyPlaces[index];
-//                 return VrPlaceCard(
-//                   title: place.title,
-//                   imageUrl: place.imageUrl,
-//                   rating: place.rating,
-//                   price: place.price,
-//                   onTap: () {
-//                     Navigator.push(
-//                       context,
-//                       MaterialPageRoute(
-//                         builder: (context) => Panorama(
-//                           panoImages: place.panoramaImages,
+//           ),
+//           SliverToBoxAdapter(
+//             child: TrendingPlaces(
+//               places: dummyPlaces,
+//               onSeeAllPressed: () {
+//                 Navigator.push(
+//                   context,
+//                   MaterialPageRoute(builder: (context) => const AllPlacesPage()),
+//                 );
+//               },
+//               onImageTap: (place) {
+//                 showDialog(
+//                   context: context,
+//                   builder: (context) => AlertDialog(
+//                     content: Column(
+//                       mainAxisSize: MainAxisSize.min,
+//                       children: [
+//                         Image.network(place.imageUrl),
+//                         const SizedBox(height: 16),
+//                         ElevatedButton(
+//                           onPressed: () {
+//                             Navigator.push(
+//                               context,
+//                               MaterialPageRoute(
+//                                 builder: (context) => Panorama(
+//                                   panoImages: place.panoramaImages,
+//                                 ),
+//                               ),
+//                             );
+//                           },
+//                           child: const Row(
+//                             mainAxisSize: MainAxisSize.min,
+//                             children: [
+//                               Icon(Icons.panorama),
+//                               SizedBox(width: 8),
+//                               Text("View Panorama"),
+//                             ],
+//                           ),
 //                         ),
-//                       ),
-//                     );
-//                   },
+//                       ],
+//                     ),
+//                   ),
 //                 );
 //               },
 //             ),
-//           ],
-//         ),
+//           ),
+//         ],
 //       ),
 //     );
 //   }
+// }
+
+// class TrendingPlaces extends StatelessWidget {
+//   final List<VrPlace> places;
+//   final VoidCallback onSeeAllPressed;
+//   final Function(VrPlace) onImageTap;
+
+//   const TrendingPlaces({
+//     Key? key,
+//     required this.places,
+//     required this.onSeeAllPressed,
+//     required this.onImageTap,
+//   }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: [
+//         GridView.builder(
+//           padding: const EdgeInsets.all(16),
+//           shrinkWrap: true,
+//           physics: const NeverScrollableScrollPhysics(),
+//           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+//             crossAxisCount: 2,
+//             childAspectRatio: 0.75,
+//             crossAxisSpacing: 16,
+//             mainAxisSpacing: 16,
+//           ),
+//           itemCount: places.length,
+//           itemBuilder: (context, index) {
+//             final place = places[index];
+//             return VrPlaceCard(
+//               title: place.title,
+//               imageUrl: place.imageUrl,
+//               rating: place.rating,
+//               price: place.price,
+//               onTap: () => onImageTap(place),
+//             );
+//           },
+//         ),
+//         ElevatedButton(
+//           onPressed: onSeeAllPressed,
+//           child: const Text('See All'),
+//         ),
+//       ],
+//     );
+//   }
+// }
+
+// class VrPlace {
+//   final String title;
+//   final String imageUrl;
+//   final double rating;
+//   final double price;
+//   final List<String> panoramaImages;
+
+//   VrPlace({
+//     required this.title,
+//     required this.imageUrl,
+//     required this.rating,
+//     required this.price,
+//     required this.panoramaImages,
+//   });
 // }
 
 // final dummyPlaces = [
@@ -87,22 +161,19 @@
 //     price: 1000,
 //     panoramaImages: ['assets/panorama/national_museum_1.jpg'],
 //   ),
-//   // Add more places...
+//   VrPlace(
+//     title: 'Unity Park',
+//     imageUrl: 'assets/images/unity_park_1.jpg',
+//     rating: 4.8,
+//     price: 1500,
+//     panoramaImages: ['assets/panorama/unity_park_1.jpg'],
+//   ),
+//   VrPlace(
+//     title: 'Entoto Park',
+//     imageUrl: 'assets/images/entoto_park_1.jpg',
+//     rating: 4.6,
+//     price: 800,
+//     panoramaImages: ['assets/panorama/entoto_park_1.jpg'],
+//   ),
 // ];
-
-// class VrPlace {
-//   final String title;
-//   final String imageUrl;
-//   final double rating;
-//   final double price;
-//   final List<String> panoramaImages;
-
-//   VrPlace({
-//     required this.title,
-//     required this.imageUrl,
-//     required this.rating,
-//     required this.price,
-//     required this.panoramaImages,
-//   });
-// }
 

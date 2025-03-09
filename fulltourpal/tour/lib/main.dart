@@ -6,14 +6,21 @@ import 'package:tour/features/ai_planner/presentation/pages/ai_planner_page.dart
 import 'package:tour/features/auth/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tour/features/auth/auth/presentation/pages/login_page.dart';
 import 'package:tour/features/auth/auth/presentation/pages/register_page.dart';
+import 'package:tour/features/booking/presentation/pages/booking_confermation.dart';
+
 import 'package:tour/features/home/home.dart';
+import 'package:tour/features/rooms/domain/entities/room_type.dart';
 import 'package:tour/features/rooms/presentation/bloc/room_bloc.dart';
+import 'package:tour/features/rooms/presentation/pages/room_detail_page.dart';
 import 'package:tour/features/rooms/presentation/pages/room_list_page.dart';
+
+// Booking feature imports
+import 'package:tour/features/booking/presentation/bloc/booking_bloc.dart';
+import 'package:tour/features/booking/domain/entities/booking.dart';
 
 import 'injection_container.dart' as di;
 
 // Features
-
 import 'features/profile/presentation/pages/profile_page.dart';
 import 'features/profile/presentation/pages/edit_profile_page.dart';
 import 'features/profile/presentation/bloc/profile_bloc.dart';
@@ -23,9 +30,6 @@ import 'features/business/presentation/pages/business_details_page.dart';
 import 'features/business/presentation/bloc/business_bloc.dart';
 import 'features/business/presentation/pages/booking_page.dart';
 import 'features/business/domain/entities/business_entity.dart';
-
-
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,13 +53,15 @@ class MyApp extends StatelessWidget {
         BlocProvider<AIPlannerBloc>(
           create: (context) => di.sl<AIPlannerBloc>(),
         ),
-
         BlocProvider<RoomBloc>(
           create: (context) => di.sl<RoomBloc>(),
         ),
-
         BlocProvider<BusinessBloc>(
           create: (context) => di.sl<BusinessBloc>(),
+          lazy: false,  // Added to ensure immediate creation
+        ),
+        BlocProvider<BookingBloc>(
+          create: (context) => di.sl<BookingBloc>(),
           lazy: false,  // Added to ensure immediate creation
         ),
       ],
@@ -119,19 +125,44 @@ class MyApp extends StatelessWidget {
                 builder: (_) => const HomePage(),
               );
 
-             case '/room':
+            case '/room':
               final businessId = settings.arguments as String;
               return MaterialPageRoute(
-                builder: (_) => RoomListPage(businessId: businessId),
+                builder: (_) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider.value(value: di.sl<RoomBloc>()),
+                    BlocProvider.value(value: di.sl<BookingBloc>()),
+                  ],
+                  child: RoomListPage(businessId: businessId),
+                ),
+              );
+                            
+            case '/room/details':
+              final args = settings.arguments as Map<String, dynamic>;
+              return MaterialPageRoute(
+                builder: (_) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider.value(value: di.sl<BookingBloc>()),
+                  ],
+                  child: RoomDetailsPage(
+                    roomType: args['roomType'] as RoomType,
+                    businessId: args['businessId'] as String,
+                  ),
+                ),
               );
 
+            case '/booking/confirmation':
+              final booking = settings.arguments as Booking;
+              return MaterialPageRoute(
+                builder: (_) => BookingConfirmationPage(booking: booking),
+              );
 
-               case '/aiplanner':
+            case '/aiplanner':
               return MaterialPageRoute(
                 builder: (_) => const AIPlannerPage(),
               );
               
-               case '/profile':
+            case '/profile':
               return MaterialPageRoute(
                 builder: (_) => const ProfilePage(),
               );

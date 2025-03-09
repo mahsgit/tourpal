@@ -1,84 +1,208 @@
+// import 'dart:math';
+
 // import 'package:flutter/material.dart';
-// import 'package:tour/features/home/widget/explore.dart';
-// import 'package:tour/features/home/widget/trending.dart';
+// import 'package:flutter/services.dart';
+// import 'package:loading_animation_widget/loading_animation_widget.dart';
+// import 'package:panorama_viewer/panorama_viewer.dart';
 
-// void main() {
-//   runApp(const MyApp());
-// }
+// // import 'panowidget.dart';
 
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
+// class Panorama extends StatefulWidget {
+//   const Panorama({super.key, required this.panoImages});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Tour App',
-//       theme: ThemeData(
-//         primarySwatch: Colors.blue,
-//         visualDensity: VisualDensity.adaptivePlatformDensity,
-//       ),
-//       home: const MainScreen(),
-//       routes: {
-//         '/businesses': (context) => const BusinessesPage(),
-//         '/profile': (context) => const ProfilePage(),
-//       },
-//     );
-//   }
-// }
-
-// class MainScreen extends StatefulWidget {
-//   const MainScreen({super.key});
+//   final List<String> panoImages;
 
 //   @override
-//   State<MainScreen> createState() => _MainScreenState();
+//   State<Panorama> createState() => _PanoramaState();
 // }
 
-// class _MainScreenState extends State<MainScreen> {
-//   int _currentIndex = 0;
+// class _PanoramaState extends State<Panorama> {
+//   final GlobalKey<PanoramaState> _panoramaKey = GlobalKey<PanoramaState>();
 
-//   final List<Widget> _pages = [
-//     const HomeContent(),
-//     const VRPage(),
-//     const AIPlannerPage(),
-//   ];
+//   int _panoId = 0;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: _pages[_currentIndex],
-//       bottomNavigationBar: _buildFancyNavBar(),
-//     );
-//   }
+//   double zoomScale = 1;
 
-//   Widget _buildFancyNavBar() {
-//     return Container(
-//       height: 80,
-//       decoration: BoxDecoration(
-//         gradient: const LinearGradient(
-//           colors: [Color(0xFF6A11CB), Color(0xFF2575FC)],
-//           begin: Alignment.centerLeft,
-//           end: Alignment.centerRight,
-//         ),
-//         boxShadow: [
-//           BoxShadow(
-//             color: Colors.black.withOpacity(0.2),
-//             blurRadius: 10,
-//             spreadRadius: 2,
+//   Widget hotspotButton(
+//       {String? text, IconData? icon, VoidCallback? onPressed}) {
+//     return Column(
+//       mainAxisAlignment: MainAxisAlignment.center,
+//       children: [
+//         TextButton(
+//           style: TextButton.styleFrom(
+//             foregroundColor: Colors.black38,
+//             backgroundColor: Colors.white,
+//             shape: const CircleBorder(),
 //           ),
-//         ],
-//         borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
-//       child: ClipRRect(
-//         borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
-//         child: NavigationBar(
-//           height: 80,
-//           backgroundColor: Colors.transparent,
-//           labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-//           selectedIndex: _currentIndex,
-//           onDestinationSelected: (index) => setState(() => _currentIndex = index),
-//           destinations: [
-//             _NavItem(icon: Icons.home, label: 'Home', isSelected: _currentIndex == 0),
-//             _NavItem(icon: Icons.vr_handheld, label: 'VR', isSelected: _currentIndex == 1),
-//             _NavItem(icon: Icons.auto_awesome, label: 'Planner', isSelected: _currentIndex == 2),
+//           onPressed: onPressed,
+//           child: Icon(icon),
+//         ),
+//         text != null
+//             ? Container(
+//                 padding: const EdgeInsets.all(4.0),
+//                 decoration: const BoxDecoration(
+//                   color: Colors.black38,
+//                   borderRadius: BorderRadius.all(Radius.circular(4)),
+//                 ),
+//                 child: Center(
+//                   child: Text(
+//                     text,
+//                     style: const TextStyle(color: Colors.white),
+//                   ),
+//                 ),
+//               )
+//             : const SizedBox()
+//       ],
+//     );
+//   }
+
+//   bool isZoomed = true;
+//   @override
+//   Widget build(BuildContext context) {
+//     _panoId = _panoId % widget.panoImages.length;
+
+//     return AnnotatedRegion<SystemUiOverlayStyle>(
+//       value: SystemUiOverlayStyle.light.copyWith(
+//         statusBarColor: Colors.transparent,
+//         statusBarIconBrightness: Brightness.light,
+//       ),
+//       child: Scaffold(
+//         body: Stack(
+//           children: [
+//             PanoramaViewer(
+//                 key: _panoramaKey,
+//                 animSpeed: 1.0,
+//                 minZoom: 0.6,
+//                 maxZoom: 1.9,
+//                 sensorControl: SensorControl.orientation,
+//                 onImageLoad: () => LoadingAnimationWidget.dotsTriangle(
+//                     color: Colors.lightBlueAccent, size: 40),
+//                 hotspots: [
+//                   Hotspot(
+//                     latitude: -15.0,
+//                     longitude: -129.0,
+//                     width: 90,
+//                     height: 74,
+//                     widget: hotspotButton(
+//                       text: "Next Room",
+//                       icon: Icons.open_in_browser,
+//                       onPressed: () => setState(() => _panoId++),
+//                     ),
+//                   ),
+//                   Hotspot(
+//                     latitude: -42.0,
+//                     longitude: -46.0,
+//                     width: 60.0,
+//                     height: 60.0,
+//                     widget: hotspotButton(
+//                       icon: Icons.lens_rounded,
+//                       onPressed: () => setState(() =>
+//                           _panoId = Random().nextInt(widget.panoImages.length)),
+//                     ),
+//                   ),
+//                   Hotspot(
+//                     latitude: -33.0,
+//                     longitude: 123.0,
+//                     width: 60.0,
+//                     height: 60.0,
+//                     widget: hotspotButton(
+//                       icon: Icons.arrow_upward,
+//                       onPressed: () => setState(() {
+//                         _panoId = Random().nextInt(widget.panoImages.length);
+//                       }),
+//                     ),
+//                   ),
+//                 ],
+//                 child: Image.asset(
+//                   widget.panoImages[_panoId % widget.panoImages.length],
+//                   // child: Image(
+//                   //   image: CachedNetworkImageProvider(
+//                   //       widget.panoImages[_panoId % widget.panoImages.length]),
+//                 )),
+//             Positioned(
+//               bottom: 20.0,
+//               right: 20.0,
+//               child: Column(
+//                 children: [
+//                   IconButton(
+//                     style: IconButton.styleFrom(
+//                       backgroundColor: Colors.black,
+//                       foregroundColor: Colors.white,
+//                       highlightColor: Colors.amberAccent,
+//                       iconSize: 30,
+//                     ),
+//                     icon: const Icon(Icons.zoom_in),
+//                     onPressed: () {
+//                       final currentState = _panoramaKey.currentState;
+//                       if (currentState != null) {
+//                         final currentZoom = currentState.scene!.camera.zoom;
+//                         currentState.setZoom(currentZoom + 0.3);
+//                       }
+//                     },
+//                   ),
+//                   const SizedBox(
+//                     height: 10,
+//                   ),
+//                   IconButton(
+//                     style: IconButton.styleFrom(
+//                       backgroundColor: Colors.black,
+//                       highlightColor: Colors.amberAccent,
+//                       iconSize: 30,
+//                       foregroundColor: Colors.white,
+//                     ),
+//                     icon: const Icon(Icons.zoom_out),
+//                     onPressed: () {
+//                       final currentState = _panoramaKey.currentState;
+//                       if (currentState != null) {
+//                         final currentZoom = currentState.scene!.camera.zoom;
+//                         currentState.setZoom(currentZoom - 0.3);
+//                       }
+//                     },
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             Positioned(
+//               top: 30,
+//               left: 20,
+//               child: CircleAvatar(
+//                 backgroundColor: Colors.black38,
+//                 child: IconButton(
+//                   icon: const Icon(
+//                     Icons.arrow_back_ios_new_outlined,
+//                     color: Colors.white,
+//                   ),
+//                   onPressed: () => Navigator.of(context).pop(),
+//                 ),
+//               ),
+//             ),
+//             // Positioned(
+//             //   top: 30.0,
+//             //   right: 20.0,
+//             //   child: DropdownButton<int>(
+//             //     value: _panoId,
+//             //     padding: const EdgeInsets.all(8),
+//             //     style: const TextStyle(
+//             //         color: Colors.white, fontWeight: FontWeight.bold),
+//             //     dropdownColor: Colors.black38,
+//             //     iconEnabledColor: Colors.white,
+//             //     items: List.generate(
+//             //       widget.panoImages.length,
+//             //       (index) => DropdownMenuItem<int>(
+//             //           value: index,
+//             //           child: Text(
+//             //             'Room ${index + 1}',
+//             //             style: TextStyle(
+//             //                 fontSize: 18, fontWeight: FontWeight.bold),
+//             //           )),
+//             //     ),
+//             //     onChanged: (value) {
+//             //       setState(() {
+//             //         _panoId = value!;
+//             //       });
+//             //     },
+//             //   ),
+//             // ),
 //           ],
 //         ),
 //       ),
@@ -86,97 +210,3 @@
 //   }
 // }
 
-// class _NavItem extends StatelessWidget {
-//   final IconData icon;
-//   final String label;
-//   final bool isSelected;
-
-//   const _NavItem({
-//     required this.icon,
-//     required this.label,
-//     required this.isSelected,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return AnimatedContainer(
-//       duration: const Duration(milliseconds: 300),
-//       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-//       decoration: BoxDecoration(
-//         color: isSelected ? Colors.white.withOpacity(0.2) : Colors.transparent,
-//         borderRadius: BorderRadius.circular(20),
-//       ),
-//       child: Column(
-//         mainAxisSize: MainAxisSize.min,
-//         children: [
-//           Icon(icon, color: Colors.white, size: 28),
-//           if (isSelected)
-//             Text(
-//               label,
-//               style: const TextStyle(
-//                 color: Colors.white,
-//                 fontSize: 12,
-//                 fontWeight: FontWeight.w500,
-//               ),
-//             ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-// class HomeContent extends StatelessWidget {
-//   const HomeContent({super.key});
-
-//   void _showComingSoon(BuildContext context) {
-//     ScaffoldMessenger.of(context).showSnackBar(
-//       const SnackBar(content: Text('Coming soon!')),
-//     );
-//   }
-
-//   void _navigateToHotels(BuildContext context) {
-//     Navigator.pushNamed(context, '/businesses');
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return SafeArea(
-//       child: SingleChildScrollView(
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             // ... Rest of your original HomePage content here ...
-//             Padding(
-//               padding: const EdgeInsets.all(16.0),
-//               child: Row(
-//                 children: [
-//                   const CircleAvatar(
-//                     backgroundImage: AssetImage('lib/asset/image.avif'),
-//                   ),
-//                   const SizedBox(width: 12),
-//                   Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       Text(
-//                         'Hello,',
-//                         style: Theme.of(context).textTheme.bodyLarge,
-//                       ),
-//                       Text(
-//                         'Daniel',
-//                         style: Theme.of(context).textTheme.titleLarge,
-//                       ),
-//                     ],
-//                   ),
-//                   const Spacer(),
-//                   IconButton(
-//                     icon: const Icon(Icons.person_outline),
-//                     onPressed: () => Navigator.pushNamed(context, '/profile'),
-//                   ),
-//                   IconButton(
-//                     icon: const Icon(Icons.notifications_outlined),
-//                     onPressed: () => _showComingSoon(context),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//             //

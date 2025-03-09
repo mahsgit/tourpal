@@ -41,11 +41,21 @@ class SearchBusinesses extends BusinessEvent {
 }
 
 class FilterBusinessesByCategory extends BusinessEvent {
-  final String category;
+  final String query;
+  final double minPrice;
+  final double maxPrice;
+  final double minRating;
+  
 
-  const FilterBusinessesByCategory({required this.category});
+
+  const FilterBusinessesByCategory({
+    required this.query,
+    required this.minPrice,
+    required this.maxPrice,
+    required this.minRating,
+  });
 
   @override
-  List<Object> get props => [category];
+  List<Object> get props => [query, minPrice, maxPrice, minRating];
 }
 

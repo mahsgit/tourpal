@@ -23,6 +23,20 @@ import 'package:tour/features/auth/auth/domain/usecases/register.dart';
 import 'package:tour/features/auth/auth/domain/usecases/reset_password.dart';
 import 'package:tour/features/auth/auth/domain/usecases/validate_email.dart';
 import 'package:tour/features/auth/auth/presentation/bloc/auth_bloc.dart';
+import 'package:tour/features/booking/data/datasources/booking_remote_data_source.dart';
+import 'package:tour/features/booking/data/repositories/booking_repository_impl.dart';
+import 'package:tour/features/booking/domain/repositories/booking_repository.dart';
+import 'package:tour/features/booking/domain/usecases/get_available_room_types.dart';
+import 'package:tour/features/booking/domain/usecases/get_available_time_ranges.dart';
+import 'package:tour/features/booking/domain/usecases/reserve_booking.dart';
+import 'package:tour/features/booking/presentation/bloc/booking_bloc.dart';
+// import 'package:tour/features/booking/data/datasources/booking_local_data_source.dart';
+// import 'package:tour/features/booking/data/datasources/booking_remote_data_source.dart';
+// import 'package:tour/features/booking/domain/repositories/booking_repository.dart';
+// import 'package:tour/features/booking/domain/usecases/get_available_room_types.dart';
+// import 'package:tour/features/booking/domain/usecases/get_available_time_ranges.dart';
+// import 'package:tour/features/booking/domain/usecases/reserve_booking.dart';
+// import 'package:tour/features/booking/presentation/bloc/booking_bloc.dart';
 import 'package:tour/features/rooms/data/datasources/room_local_data_source.dart';
 import 'package:tour/features/rooms/data/datasources/room_remote_data_source.dart';
 import 'package:tour/features/rooms/data/repositories/room_repository_impl.dart';
@@ -80,6 +94,9 @@ Future<void> init() async {
 
   // Room
   await _initRoom();
+
+  // Booking
+  await _initBooking();
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
@@ -314,3 +331,43 @@ Future<void> _initRoom() async {
     () => RoomLocalDataSourceImpl(sharedPreferences: sl<SharedPreferences>()),
   );
 }
+
+
+Future<void> _initBooking() async {
+  // Bloc
+  sl.registerFactory<BookingBloc>(
+    () => BookingBloc(
+      getAvailableTimeRanges: sl<GetAvailableTimeRanges>(),
+      getAvailableRoomTypes: sl<GetAvailableRoomTypes>(),
+      reserveBooking: sl<ReserveBooking>(),
+    ),
+  );
+
+  // Use cases
+  sl.registerLazySingleton<GetAvailableTimeRanges>(
+    () => GetAvailableTimeRanges(sl()),
+  );
+  sl.registerLazySingleton<GetAvailableRoomTypes>(
+    () => GetAvailableRoomTypes(sl()),
+  );
+  sl.registerLazySingleton<ReserveBooking>(
+    () => ReserveBooking(sl()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<BookingRepository>(
+    () => BookingRepositoryImpl(
+      remoteDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
+
+  // Data sources
+  sl.registerLazySingleton<BookingRemoteDataSource>(
+    () => BookingRemoteDataSourceImpl(
+      client: sl(),
+      authLocalDataSource: sl(),
+    ),
+  );
+}
+

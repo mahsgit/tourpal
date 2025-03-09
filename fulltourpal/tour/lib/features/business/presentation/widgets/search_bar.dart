@@ -40,12 +40,6 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
         decoration: InputDecoration(
           hintText: 'Search hotels...',
           prefixIcon: const Icon(Icons.search),
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: () {
-              // Show filter options
-            },
-          ),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,

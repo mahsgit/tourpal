@@ -7,7 +7,9 @@ abstract class BusinessRepository {
     int page = 1,
     int limit = 10,
     String? query,
-    String? category,
+    double? minPrice,
+    double? maxPrice,
+    double? minRating,
   });
   Future<Either<Failure, BusinessEntity>> getBusinessDetails(String businessId);
 }

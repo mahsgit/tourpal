@@ -29,5 +29,10 @@ class Urls {
 
   //ai
   static const String aiPlanner = '$baseUrl/aiplan/generate';
+
+  //booking
+  static const String availableTimeRanges = '$baseUrl/bookings/available-time-ranges';
+  static const String availableRoomTypes = '$baseUrl/bookings/available-room-types';
+  static const String reserveBooking = '$baseUrl/bookings/reserve';
 }
 

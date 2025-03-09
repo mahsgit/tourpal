@@ -3,7 +3,14 @@ import '../../../../core/error/failures.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../entities/room_type.dart';
 import '../repositories/room_repository.dart';
+class GetRoomTypesParams {
+  final String businessId;
+  
 
+  GetRoomTypesParams({
+    required this.businessId,
+  });
+}
 class GetRoomTypes implements UseCase<List<RoomType>, String> {
   final RoomRepository repository;
 

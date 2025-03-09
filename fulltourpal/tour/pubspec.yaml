@@ -49,8 +49,9 @@ dependencies:
   equatable: 
   image_picker: 
   url_launcher:
-  # loading_animation_widget:
-  # panorama:
+  timeago: ^3.0.2
+  # loading_animation_widget: ^1.2.0
+
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +79,8 @@ flutter:
   assets:
     - image/download.png
     - image/image.png
+    # - image.avif
+    # - panorama2.webp
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

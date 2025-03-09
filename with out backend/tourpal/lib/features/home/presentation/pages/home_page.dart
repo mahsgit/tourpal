@@ -56,16 +56,16 @@ class HomePage extends StatelessWidget {
                                 Image.network(place.imageUrl),
                                 ElevatedButton(
                                   onPressed: () {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => const Panorama(
-                                    //       panoImages: [
-                                    //         'lib/asset/panorama2.webp',
-                                    //       ],
-                                    //     ),
-                                    //   ),
-                                    // );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const Panorama(
+                                          panoImages: [
+                                            'lib/asset/panorama2.webp',
+                                          ],
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,

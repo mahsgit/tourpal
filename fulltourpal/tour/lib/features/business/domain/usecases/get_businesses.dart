@@ -8,13 +8,17 @@ class GetBusinessesParams {
   final int page;
   final int limit;
   final String? query;
-  final String? category;
+ final double? minPrice;
+  final double? maxPrice;
+  final double? minRating;
 
   GetBusinessesParams({
     this.page = 1,
     this.limit = 10,
     this.query,
-    this.category,
+    this.minPrice,
+    this.maxPrice,
+    this.minRating,
   });
 }
 
@@ -31,7 +35,10 @@ class GetBusinesses implements UseCase<List<BusinessEntity>, GetBusinessesParams
       page: params.page,
       limit: params.limit,
       query: params.query,
-      category: params.category,
+      minPrice: params.minPrice,
+      maxPrice: params.maxPrice,
+      minRating: params.minRating,
+      
     );
   }
 }

@@ -80,7 +80,12 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     Emitter<BusinessState> emit,
   ) async {
     emit(BusinessLoading());
-    final result = await getBusinesses(GetBusinessesParams(category: event.category.toLowerCase()));
+    final result = await getBusinesses(GetBusinessesParams(
+      query: event.query,
+      minPrice: event.minPrice,
+      maxPrice: event.maxPrice,
+      minRating: event.minRating,
+    ));
     result.fold(
       (failure) => emit(BusinessError(message: failure.message)),
       (businesses) => emit(BusinessesLoaded(businesses: businesses)),

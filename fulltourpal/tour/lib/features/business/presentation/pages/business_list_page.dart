@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tour/features/business/presentation/widgets/filter.dart';
 import 'package:tour/features/business/presentation/widgets/search_bar.dart';
 import '../bloc/business_bloc.dart';
 import '../bloc/business_event.dart';
 import '../bloc/business_state.dart';
 import '../widgets/business_card.dart';
+// import '../widgets/filter_dialog.dart';
+// import '../widgets/filter_dialog.dart';
 
 class BusinessListPage extends StatefulWidget {
   const BusinessListPage({Key? key}) : super(key: key);
@@ -18,7 +21,9 @@ class _BusinessListPageState extends State<BusinessListPage> {
   int _currentPage = 1;
   static const int _itemsPerPage = 10;
   String _searchQuery = '';
-  
+  double _minPrice = 0;
+  double _maxPrice = 1000;
+  double _minRating = 0;
 
   @override
   void initState() {
@@ -48,7 +53,35 @@ class _BusinessListPageState extends State<BusinessListPage> {
     setState(() {
       _searchQuery = query;
     });
-    context.read<BusinessBloc>().add(SearchBusinesses(query: query));
+    _applyFilters();
+  }
+
+  void _applyFilters() {
+    context.read<BusinessBloc>().add(FilterBusinessesByCategory(
+          query: _searchQuery,
+          minPrice: _minPrice,
+          maxPrice: _maxPrice,
+          minRating: _minRating,
+        ));
+  }
+
+  void _showFilterDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => FilterDialog(
+        minPrice: _minPrice,
+        maxPrice: _maxPrice,
+        minRating: _minRating,
+        onApplyFilters: (minPrice, maxPrice, minRating) {
+          setState(() {
+            _minPrice = minPrice;
+            _maxPrice = maxPrice;
+            _minRating = minRating;
+          });
+          _applyFilters();
+        },
+      ),
+    );
   }
 
   @override
@@ -64,6 +97,28 @@ class _BusinessListPageState extends State<BusinessListPage> {
         child: CustomScrollView(
           controller: _scrollController,
           slivers: [
+            SliverAppBar(
+              floating: true,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              title: const Text('Hotels'),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.person_outline),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/profile');
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.notifications_outlined),
+                  onPressed: () {
+                    // Handle notifications
+                  },
+                ),
+              ],
+            ),
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -72,24 +127,16 @@ class _BusinessListPageState extends State<BusinessListPage> {
                   children: [
                     Row(
                       children: [
-                        const Spacer(),
-                        IconButton(
-                          icon: const Icon(Icons.person_outline),
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/profile');
-                          },
+                        Expanded(
+                          child: CustomSearchBar(
+                            onSearch: _onSearch,
+                          ),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.notifications_outlined),
-                          onPressed: () {
-                            // Handle notifications
-                          },
+                          icon: const Icon(Icons.filter_list),
+                          onPressed: _showFilterDialog,
                         ),
                       ],
-                    ),
-                    const SizedBox(height: 24),
-                    CustomSearchBar(
-                      onSearch: _onSearch,
                     ),
                     const SizedBox(height: 24),
                     Text(
@@ -123,7 +170,10 @@ class _BusinessListPageState extends State<BusinessListPage> {
                     final matchesSearch = business.businessName
                         .toLowerCase()
                         .contains(_searchQuery.toLowerCase());
-                    return matchesSearch;
+                    final matchesPrice =
+                        business.price >= _minPrice && business.price <= _maxPrice;
+                    final matchesRating = business.rating >= _minRating;
+                    return matchesSearch && matchesPrice && matchesRating;
                   }).toList();
 
                   if (filteredBusinesses.isEmpty) {
@@ -140,14 +190,10 @@ class _BusinessListPageState extends State<BusinessListPage> {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-    mainAxisSpacing: 16.0,
-    crossAxisSpacing: 16.0,
-    childAspectRatio: 0.7,
+                        mainAxisSpacing: 16.0,
+                        crossAxisSpacing: 16.0,
+                        childAspectRatio: 0.7,
                       ),
-
-
-
-
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           if (index >= filteredBusinesses.length) {
