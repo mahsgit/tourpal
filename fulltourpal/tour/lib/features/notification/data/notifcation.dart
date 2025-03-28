@@ -14,6 +14,9 @@ class NotificationService {
   // Stream controller to broadcast notification changes
   final ValueNotifier<List<NotificationEntity>> notificationsNotifier = 
       ValueNotifier<List<NotificationEntity>>([]);
+      
+  // Notifier for unread count
+  final ValueNotifier<int> unreadCountNotifier = ValueNotifier<int>(0);
 
   // Initialize with dummy data
   void init() {
@@ -21,6 +24,7 @@ class NotificationService {
       _addDummyNotifications();
     }
     _updateNotifier();
+    _updateUnreadCount();
   }
 
   // Get all notifications
@@ -32,12 +36,14 @@ class NotificationService {
   void addNotification(NotificationEntity notification) {
     _notifications.add(notification);
     _updateNotifier();
+    _updateUnreadCount();
   }
 
   // Delete a notification
   void deleteNotification(String id) {
     _notifications.removeWhere((notification) => notification.id == id);
     _updateNotifier();
+    _updateUnreadCount();
   }
 
   // Mark a notification as read
@@ -46,6 +52,7 @@ class NotificationService {
     if (index != -1) {
       _notifications[index] = _notifications[index].copyWith(isRead: true);
       _updateNotifier();
+      _updateUnreadCount();
     }
   }
 
@@ -55,6 +62,12 @@ class NotificationService {
       _notifications[i] = _notifications[i].copyWith(isRead: true);
     }
     _updateNotifier();
+    _updateUnreadCount();
+  }
+
+  // Get unread count
+  int getUnreadCount() {
+    return _notifications.where((notification) => !notification.isRead).length;
   }
 
   // Add a hotel reservation notification
@@ -89,6 +102,11 @@ class NotificationService {
   // Update the notifier
   void _updateNotifier() {
     notificationsNotifier.value = List.from(_notifications);
+  }
+  
+  // Update unread count
+  void _updateUnreadCount() {
+    unreadCountNotifier.value = getUnreadCount();
   }
 
   // Add dummy notifications for testing

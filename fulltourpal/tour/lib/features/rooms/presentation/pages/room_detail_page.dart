@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tour/features/notification/data/notifcation.dart';
 import '../../../booking/domain/entities/booking.dart';
 import '../../../booking/presentation/bloc/booking_bloc.dart';
 import '../../../booking/presentation/bloc/booking_event.dart';
@@ -24,6 +25,7 @@ class RoomDetailsPage extends StatefulWidget {
 class _RoomDetailsPageState extends State<RoomDetailsPage> {
   DateTime? _startDate;
   DateTime? _endDate;
+  final NotificationService _notificationService = NotificationService();
 
   void _onDateRangeSelected(DateTime start, DateTime end) {
     setState(() {
@@ -63,8 +65,17 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
       body: BlocListener<BookingBloc, BookingState>(
         listener: (context, state) {
           if (state is BookingReserved) {
+            // Add notification when booking is successful
+            _notificationService.addReservationNotification(
+              widget.roomType.roomTypeName,
+              state.booking.id,
+            );
+            
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Booking successful!')),
+              const SnackBar(
+                content: Text('Booking successful! Check your notifications.'),
+                duration: Duration(seconds: 3),
+              ),
             );
             Navigator.pop(context);
           } else if (state is BookingError) {

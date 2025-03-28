@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tour/features/notification/data/notifcation.dart';
 import 'package:tour/features/notification/domain/entity.dart';
 import 'package:tour/features/notification/page/nitem.dart';
-import 'package:tour/features/notification/page/nopage.dart';
+import 'package:tour/features/notification/page/nodetail.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
@@ -40,6 +40,13 @@ class _NotificationPageState extends State<NotificationPage> {
     );
   }
 
+  Future<void> _refreshNotifications() async {
+    // In a real app, you would fetch notifications from a server here
+    // For this demo, we'll just wait a bit to simulate a network request
+    await Future.delayed(const Duration(milliseconds: 800));
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,67 +77,53 @@ class _NotificationPageState extends State<NotificationPage> {
             );
           }
 
-          return ListView.builder(
-            itemCount: notifications.length,
-            itemBuilder: (context, index) {
-              final notification = notifications[index];
-              return Dismissible(
-                key: Key(notification.id),
-                background: Container(
-                  color: Colors.red,
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.only(left: 20),
-                  child: const Icon(
-                    Icons.delete,
-                    color: Colors.white,
+          return RefreshIndicator(
+            onRefresh: _refreshNotifications,
+            child: ListView.builder(
+              itemCount: notifications.length,
+              itemBuilder: (context, index) {
+                final notification = notifications[index];
+                return Dismissible(
+                  key: Key(notification.id),
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.only(left: 20),
+                    child: const Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                secondaryBackground: Container(
-                  color: Colors.blue,
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(right: 20),
-                  child: const Icon(
-                    Icons.arrow_forward,
-                    color: Colors.white,
+                  secondaryBackground: Container(
+                    color: Colors.blue,
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.only(right: 20),
+                    child: const Icon(
+                      Icons.arrow_forward,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                confirmDismiss: (direction) async {
-                  if (direction == DismissDirection.startToEnd) {
-                    // Delete notification
-                    _deleteNotification(notification.id);
-                    return true;
-                  } else if (direction == DismissDirection.endToStart) {
-                    // View notification details
-                    _viewNotificationDetails(notification);
+                  confirmDismiss: (direction) async {
+                    if (direction == DismissDirection.startToEnd) {
+                      // Delete notification
+                      _deleteNotification(notification.id);
+                      return true;
+                    } else if (direction == DismissDirection.endToStart) {
+                      // View notification details
+                      _viewNotificationDetails(notification);
+                      return false;
+                    }
                     return false;
-                  }
-                  return false;
-                },
-                child: NotificationItem(
-                  notification: notification,
-                  onTap: () => _viewNotificationDetails(notification),
-                ),
-              );
-            },
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Simulate a new hotel reservation notification
-          _notificationService.addReservationNotification(
-            'Grand Hotel',
-            'reservation_${DateTime.now().millisecondsSinceEpoch}',
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('New reservation notification added'),
-              duration: Duration(seconds: 2),
+                  },
+                  child: NotificationItem(
+                    notification: notification,
+                    onTap: () => _viewNotificationDetails(notification),
+                  ),
+                );
+              },
             ),
           );
         },
-        child: const Icon(Icons.add),
-        tooltip: 'Simulate reservation notification',
       ),
     );
   }

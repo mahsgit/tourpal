@@ -1,8 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:tour/features/ai_planner/presentation/pages/ai_planner_page.dart';
+import 'package:tour/features/home/notification.dart';
 import 'package:tour/features/home/widget/explore.dart';
 import 'package:tour/features/home/widget/trending.dart';
+import 'package:tour/features/notification/data/notifcation.dart';
 import 'package:tour/features/vr/page/vr_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  final NotificationService _notificationService = NotificationService();
 
   // List of URLs for random beautiful images
   final List<String> _imageUrls = [
@@ -30,6 +33,9 @@ class _HomePageState extends State<HomePage> {
 
     // Get a random image from the list when the page is loaded
     _randomImageUrl = _imageUrls[Random().nextInt(_imageUrls.length)];
+    
+    // Initialize notification service
+    _notificationService.init();
   }
 
   void _onItemTapped(int index) {
@@ -56,10 +62,8 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _showComingSoon(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Coming soon!')),
-    );
+  void _navigateToNotifications(BuildContext context) {
+    Navigator.pushNamed(context, '/notifications');
   }
 
   void _navigateToHotels(BuildContext context) {
@@ -101,9 +105,17 @@ class _HomePageState extends State<HomePage> {
                       icon: const Icon(Icons.person_outline),
                       onPressed: () => Navigator.pushNamed(context, '/profile'),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.notifications_outlined),
-                      onPressed: () => _showComingSoon(context),
+                    ValueListenableBuilder<int>(
+                      valueListenable: _notificationService.unreadCountNotifier,
+                      builder: (context, unreadCount, child) {
+                        return NotificationBadge(
+                          count: unreadCount,
+                          child: IconButton(
+                            icon: const Icon(Icons.notifications_outlined),
+                            onPressed: () => _navigateToNotifications(context),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -144,17 +156,36 @@ class _HomePageState extends State<HomePage> {
                     ExploreCard(
                       title: 'Restaurant',
                       image: 'https://picsum.photos/200/300?3',
-                      onTap: () => _showComingSoon(context),
+                      onTap: () => _navigateToNotifications(context), // Changed to navigate to notifications for testing
                     ),
                     ExploreCard(
                       title: 'Attraction',
                       image: 'https://picsum.photos/200/300?4',
-                      onTap: () => _showComingSoon(context),
+                      onTap: () {
+                        // Add a test notification for demonstration
+                        _notificationService.addNewHotelNotification(
+                          'Grand Hotel',
+                          'hotel_123',
+                          'https://picsum.photos/200/300?6',
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('New hotel notification added!')),
+                        );
+                      },
                     ),
                     ExploreCard(
                       title: 'Tour Guide',
                       image: 'https://picsum.photos/200/300?5',
-                      onTap: () => _showComingSoon(context),
+                      onTap: () {
+                        // Add a test reservation notification for demonstration
+                        _notificationService.addReservationNotification(
+                          'Luxury Resort',
+                          'reservation_789',
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('New reservation notification added!')),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -199,13 +230,13 @@ class _HomePageState extends State<HomePage> {
                     image: _randomImageUrl,
                     rating: 4.7,
                     price: 1200,
-                    onTap: () => _showComingSoon(context),
+                    onTap: () => _navigateToNotifications(context),
                   );
                 },
               ),
               Center(
                 child: TextButton(
-                  onPressed: () => _showComingSoon(context),
+                  onPressed: () => _navigateToNotifications(context),
                   child: const Text('See More'),
                 ),
               ),
@@ -240,3 +271,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+

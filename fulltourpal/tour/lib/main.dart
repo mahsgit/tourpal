@@ -9,6 +9,10 @@ import 'package:tour/features/auth/auth/presentation/pages/register_page.dart';
 import 'package:tour/features/booking/presentation/pages/booking_confermation.dart';
 
 import 'package:tour/features/home/home.dart';
+import 'package:tour/features/notification/data/notifcation.dart';
+import 'package:tour/features/notification/domain/entity.dart';
+import 'package:tour/features/notification/page/nodetail.dart';
+import 'package:tour/features/notification/page/npage.dart';
 import 'package:tour/features/rooms/domain/entities/room_type.dart';
 import 'package:tour/features/rooms/presentation/bloc/room_bloc.dart';
 import 'package:tour/features/rooms/presentation/pages/room_detail_page.dart';
@@ -17,6 +21,8 @@ import 'package:tour/features/rooms/presentation/pages/room_list_page.dart';
 // Booking feature imports
 import 'package:tour/features/booking/presentation/bloc/booking_bloc.dart';
 import 'package:tour/features/booking/domain/entities/booking.dart';
+
+// Notification feature imports
 
 import 'injection_container.dart' as di;
 
@@ -31,9 +37,14 @@ import 'features/business/presentation/bloc/business_bloc.dart';
 import 'features/business/presentation/pages/booking_page.dart';
 import 'features/business/domain/entities/business_entity.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
+  
+  // Initialize notification service
+  NotificationService().init();
+  
   runApp(const MyApp());
 }
 
@@ -182,6 +193,19 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                 builder: (_) => BookingPage(business: business),
               );
+              
+            // Add notification routes
+            case '/notifications':
+              return MaterialPageRoute(
+                builder: (_) => const NotificationPage(),
+              );
+              
+            case '/notification/details':
+              final notification = settings.arguments as NotificationEntity;
+              return MaterialPageRoute(
+                builder: (_) => NotificationDetailPage(notification: notification),
+              );
+              
             default:
               return MaterialPageRoute(
                 builder: (_) => const LoginPage(),
